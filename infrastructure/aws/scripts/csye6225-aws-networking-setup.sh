@@ -135,7 +135,6 @@ echo "Subnets associated with public route table"
 
 #creating public route
 aws ec2 create-route --route-table-id $publicRouteTableId --destination-cidr-block 0.0.0.0/0 --gateway-id $internetGatewayId
-aws_response_rtable=$(aws ec2 create-route-table --vpc-id $vpcId)
 if [ $? -ne 0 ]; then
     echo "Failed during creating Public Route Table"
     exit 1
@@ -162,7 +161,7 @@ aws ec2 associate-route-table --route-table-id $privateRouteTableId --subnet-id 
 aws ec2 associate-route-table --route-table-id $privateRouteTableId --subnet-id $subnetId6
 echo "Subnets associated with Private Route Table"
 
-echo "InternetGatewatId=$internetGatewayId" >> "$vpcName".txt
+echo "InternetGatewayId=$internetGatewayId" >> "$vpcName".txt
 echo "PublicRouteTableId=$publicRouteTableId" >> "$vpcName".txt
 echo "PrivateRouteTableId=$privateRouteTableId" >> "$vpcName".txt
 
