@@ -1,15 +1,22 @@
 package com.gpch.login.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
-
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import java.util.Set;
 
 @Data
 @Builder
@@ -40,8 +47,7 @@ public class User {
     @Column(name = "active")
     private int active;
     @ManyToMany(cascade = CascadeType.ALL)
-    //@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    //private Set<Role> roles;
+    
 	public int getId() {
 		return id;
 	}
@@ -78,11 +84,5 @@ public class User {
 	public void setActive(int active) {
 		this.active = active;
 	}
-	/*public Set<Role> getRoles() {
-		return roles;
-	}
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}*/
 
 }
