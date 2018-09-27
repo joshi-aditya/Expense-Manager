@@ -12,8 +12,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +26,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "user")
 public class User {
 
-	public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "user_id")
@@ -57,16 +54,6 @@ public class User {
 		return id;
 	}
 
-//	public User(String email, String password, String name, String lastName, int active, String[] roles) {
-//		super();
-//		this.email = email;
-//		setPassword(password);
-//		this.name = name;
-//		this.lastName = lastName;
-//		this.active = active;
-//		this.roles = roles;
-//	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -84,7 +71,7 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		this.password = PASSWORD_ENCODER.encode(password);
+		this.password = password; 
 	}
 
 	public String getName() {

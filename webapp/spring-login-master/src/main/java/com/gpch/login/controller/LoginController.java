@@ -3,17 +3,17 @@ package com.gpch.login.controller;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.gpch.login.model.User;
 import com.gpch.login.service.UserService;
 
-@Controller
+@RestController
 public class LoginController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class LoginController {
      * Added the to register the users and also check is the user is already present
      * @return String 
      */
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/register", method = RequestMethod.POST)
     @ResponseBody
     public String createNewUser(@RequestBody User user, BindingResult bindingResult) {
         
