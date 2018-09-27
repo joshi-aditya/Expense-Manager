@@ -5,6 +5,11 @@ vpcName="$sname-csye6225-vpc"
 
 #reading variables from txt
 . "./$vpcName.txt"
+if [ $? -ne 0 ]; then
+    echo "Failed to read file. Make sure the VPC details file exists!"
+    exit 1
+fi
+
 vpcid=$(echo $VpcId)
 subnetId1=$(echo $SubnetId1)
 subnetId2=$(echo $SubnetId2)
@@ -29,31 +34,62 @@ echo "All Subnets deleted!"
 #deleting route
 echo "Deleting route..."
 aws ec2 delete-route --route-table-id $publicRouteTableId --destination-cidr-block 0.0.0.0/0
-echo "Route deleted!"
+if [ $? -ne 0 ]; then
+    echo "Failed during deleting route"
+    exit 1
+else
+    echo "Route deleted!"
+fi
 
 #deleting public route table
 echo "Deleting public route table..."
 aws ec2 delete-route-table --route-table-id $publicRouteTableId
-echo "Deleted public route table!"
+if [ $? -ne 0 ]; then
+    echo "Failed during deleting public route table"
+    exit 1
+else
+    echo "Deleted public route table!"
+fi
 
 #deleting private route table
 echo "Deleting private route table..."
 aws ec2 delete-route-table --route-table-id $privateRouteTableId
-echo "Deleted private route table!"
+if [ $? -ne 0 ]; then
+    echo "Failed during deleting private route table"
+    exit 1
+else
+    echo "Deleted private route table!"
+fi
 
 #detaching internet gateway
 echo "Detaching internet gateway..."
 aws ec2 detach-internet-gateway --internet-gateway-id $internetGatewayId --vpc-id $vpcid
-echo "Detached internet gateway from VPC!"
+if [ $? -ne 0 ]; then
+    echo "Failed during detaching internet gateway from VPC"
+    exit 1
+else
+    echo "Detached internet gateway from VPC!"
+fi
 
 #deleting internet gateway
 echo "Deleting internet gateway..."
 aws ec2 delete-internet-gateway --internet-gateway-id $internetGatewayId
-echo "Deleted internet gateway!"
+if [ $? -ne 0 ]; then
+    echo "Failed during deleting internet gateway"
+    exit 1
+else
+    echo "Deleted internet gateway!"
+fi
 
 #deleting vpc
 echo "Deleting vpc..."
 aws ec2 delete-vpc --vpc-id $vpcid
-echo "Deleted VPC!"
+if [ $? -ne 0 ]; then
+    echo "Failed during deleting VPC"
+    exit 1
+else
+    rm -rf $vpcName.txt
+    echo "Deleted VPC!"
+fi
 
 echo "======== Networking stack cleared ========="
