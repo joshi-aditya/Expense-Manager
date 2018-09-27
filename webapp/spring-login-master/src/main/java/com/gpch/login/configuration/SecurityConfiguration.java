@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.gpch.login.model.User;
+import com.gpch.login.service.UserService;
+
 import javax.sql.DataSource;
 
 @Configuration
@@ -22,41 +25,62 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
    
     @Autowired
     private DataSource dataSource;
+    
+    @Autowired
+    UserService userService;
+
 
     @Value("${spring.queries.users-query}")
     private String usersQuery;
 
+    
+    
     @Override
-    protected void configure(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.
-                jdbcAuthentication()
-                .usersByUsernameQuery(usersQuery)
-                .dataSource(dataSource)
-                .passwordEncoder(bCryptPasswordEncoder);
-        
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(User.PASSWORD_ENCODER);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.
-                authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/registration").permitAll()
-                .antMatchers("/time").anonymous().anyRequest()
-                .authenticated().and().csrf().disable().formLogin()
-                .loginPage("/login").failureUrl("/login?error=true")
-                .defaultSuccessUrl("/admin/home")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").and().exceptionHandling()
-                .accessDeniedPage("/access-denied");
-    	
+        http.authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic()
+                .and()
+                .csrf().disable();
     }
+    
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth)
+//            throws Exception {
+//        auth.
+//                jdbcAuthentication()
+//                .usersByUsernameQuery(usersQuery)
+//                .dataSource(dataSource)
+//                .passwordEncoder(bCryptPasswordEncoder);
+//        
+//    }
+//
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//
+//        http.
+//                authorizeRequests()
+//                .antMatchers("/").permitAll()
+//                .antMatchers("/login").permitAll()
+//                .antMatchers("/registration").permitAll()
+//                .antMatchers("/time").anonymous().anyRequest()
+//                .authenticated().and().csrf().disable().formLogin()
+//                .loginPage("/login").failureUrl("/login?error=true")
+//                .defaultSuccessUrl("/admin/home")
+//                .usernameParameter("email")
+//                .passwordParameter("password")
+//                .and().logout()
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//                .logoutSuccessUrl("/").and().exceptionHandling()
+//                .accessDeniedPage("/access-denied");
+//    	
+//    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
