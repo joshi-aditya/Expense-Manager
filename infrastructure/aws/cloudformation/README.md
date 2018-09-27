@@ -16,10 +16,11 @@ sudo dnf install jq
 ```
 Bash csye6225-aws-cf-create-stack.sh
 ```
-* Enter the name of the stack
+* Enter the name of the stack to be created
 
 #### Stack deletion
 * To delete the stack, run the following script in terminal
 ```
 Bash csye6225-aws-cf-terminate-stack.sh
 ```
+* Enter the name of the stack to be deleted
