@@ -1,7 +1,11 @@
 ---
 Description: >-
-  An AWS VPC with three subnets.
+  An AWS VPC with three public and private subnets.
 AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  StackName:
+    Description: An stack name that will be prefixed to resource names
+    Type: String
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -10,8 +14,15 @@ Resources:
       EnableDnsSupport: false
       EnableDnsHostnames: false
       InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: !Sub ${StackName}-csye6225-VPC
   InternetGateway:
     Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub ${StackName}-csye6225-InternetGateway
   VPCGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
@@ -63,10 +74,16 @@ Resources:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${StackName}-csye6225-public-route-table
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${StackName}-csye6225-private-route-table
   InternetRoute:
     Type: AWS::EC2::Route
     DependsOn: InternetGateway
