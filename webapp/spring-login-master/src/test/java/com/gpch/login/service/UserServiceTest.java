@@ -1,25 +1,15 @@
 package com.gpch.login.service;
 
-import com.gpch.login.model.User;
-import com.gpch.login.repository.RoleRepository;
-import com.gpch.login.repository.UserRepository;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.MockitoAnnotations.initMocks;
+import com.gpch.login.model.User;
+import com.gpch.login.repository.UserRepository;
 
 public class UserServiceTest {
 
     @Mock
     private UserRepository mockUserRepository;
-    @Mock
-    private RoleRepository mockRoleRepository;
     @Mock
     private BCryptPasswordEncoder mockBCryptPasswordEncoder;
 
