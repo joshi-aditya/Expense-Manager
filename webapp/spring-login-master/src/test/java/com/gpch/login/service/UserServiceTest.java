@@ -1,6 +1,13 @@
 package com.gpch.login.service;
 
+import static org.hamcrest.CoreMatchers.any;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.gpch.login.model.User;
@@ -13,29 +20,37 @@ public class UserServiceTest {
     @Mock
     private BCryptPasswordEncoder mockBCryptPasswordEncoder;
 
+    @Mock
     private UserService userServiceUnderTest;
     private User user;
 
-   /* @Before
+    @Before
     public void setUp() {
-        initMocks(this);
-        userServiceUnderTest = new UserService(mockUserRepository,
-                                               mockRoleRepository,
-                                               mockBCryptPasswordEncoder);
-        user = User.builder()
-                .id(1)
-                .name("Gustavo")
-                .lastName("Ponce")
-                .email("test@test.com")
-                .build();
-
-        Mockito.when(mockUserRepository.save(any()))
-                .thenReturn(user);
-        Mockito.when(mockUserRepository.findByEmail(anyString()))
-                .thenReturn(user);
+        
+//        userServiceUnderTest = new UserService(mockUserRepository,
+//                                               mockBCryptPasswordEncoder);
+//        user = new User("test@test.com", "test", "Meven", "DCunha", 1);
+//        		
+//        Mockito.when(mockUserRepository.save(user))
+//                .thenReturn(user);
+//        Mockito.when(mockUserRepository.findByEmail(user.getEmail()))
+//                .thenReturn(user);
     }
 
     @Test
+    public void testSaveUser() {
+        // Setup
+        final String email = "test@test.com";
+
+        //user = new User("test@test.com", "test", "Meven", "DCunha", 1);
+        // Run the test
+        User result = userServiceUnderTest.saveUser(user);
+
+        // Verify the results
+        assertEquals(email, result.getEmail());
+    }
+
+	@Test
     public void testFindUserByEmail() {
         // Setup
         final String email = "test@test.com";
@@ -47,15 +62,5 @@ public class UserServiceTest {
         assertEquals(email, result.getEmail());
     }
 
-    @Test
-    public void testSaveUser() {
-        // Setup
-        final String email = "test@test.com";
-
-        // Run the test
-        User result = userServiceUnderTest.saveUser(User.builder().build());
-
-        // Verify the results
-        assertEquals(email, result.getEmail());
-    }*/
+    
 }
