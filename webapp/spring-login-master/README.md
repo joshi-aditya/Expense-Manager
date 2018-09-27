@@ -6,11 +6,11 @@
 Below are the functionalities which code follows :-
 
 As a user, 
-> You will be able to make GET requests to /. 
-> The API will respond with current time if you provide the basic authentication headers. 
-> System will inform for already created account if you are trying to create account with alread existing email.
-> Password security using BCrypt password hashing scheme with salt.
-> Input to API request/response should be in JSON.
+- You will be able to make GET requests to /. 
+- The API will respond with current time if you provide the basic authentication headers. 
+- System will inform for already created account if you are trying to create account with alread existing email.
+- Password security using BCrypt password hashing scheme with salt.
+- Input to API request/response should be in JSON.
 
 Installation:
 1. Install mysql server
@@ -31,5 +31,5 @@ Below are the steps to start the application:
     >  This will create user table under cloud databse along with loading of the unit test cases for the project)
 
 Open Postman and run
-> For creation of new user, call http://localhost:8080/user/register with POST and specify JSON data in Request body
-> For getting the current time, call http://localhost:8080/time with GET and specify authorization as 'Basic Auth' and input username, password 
+- For creation of new user, call http://localhost:8080/user/register with POST and specify JSON data in Request body
+- For getting the current time, call http://localhost:8080/time with GET and specify authorization as 'Basic Auth' and input username, password 
