@@ -22,18 +22,18 @@ Installation:
 Below are the steps to start the application:
 
 1. Download the project folder (copy the same to local file) and start the mysql server
-    ```
+	```
 	systemctl start mysqld.service
-```
+	```
 2. Create cloud schema
-    ```
+    	```
 	create database cloud
-```
+	```
 3. Specify the username and password for mysql root user in application.properties file 
 3. Run spring boot project in command line
-    ```
+    	```
 	java -jar target/login-0.0.1-SNAPSHOT.jar
-```
+	```
     >  This will create user table under cloud databse along with loading of the unit test cases for the project)
 
 Open Postman and run
