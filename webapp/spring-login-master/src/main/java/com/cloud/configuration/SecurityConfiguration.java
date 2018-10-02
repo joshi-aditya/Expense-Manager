@@ -1,7 +1,6 @@
-package com.gpch.login.configuration;
+package com.cloud.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.gpch.login.service.UserService;
+import com.cloud.service.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -27,11 +26,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Value("${spring.queries.users-query}")
-    private String usersQuery;
-
-    
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

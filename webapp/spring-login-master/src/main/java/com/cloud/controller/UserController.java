@@ -1,4 +1,4 @@
-package com.gpch.login.controller;
+package com.cloud.controller;
 
 import java.util.Date;
 
@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gpch.login.model.User;
-import com.gpch.login.service.UserService;
+import com.cloud.constants.CommonConstants;
+import com.cloud.model.User;
+import com.cloud.service.UserService;
 
 @RestController
-public class LoginController {
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -40,11 +41,11 @@ public class LoginController {
         
         User userExists = userService.findUserByEmail(user.getEmail());
         if (userExists != null) {
-           return "There is already a user registered with the email provided";
+           return CommonConstants.USER_ALREADY_EXISTS;
         }
        
         userService.saveUser(user);
-        return "User has been registered successfully";
+        return CommonConstants.USER_REGISTERATION_SUCCESS;
     }
 
 }
