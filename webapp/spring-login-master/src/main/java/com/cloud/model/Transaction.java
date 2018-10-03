@@ -41,6 +41,18 @@ public class Transaction {
     private String category;
 	@OneToOne(cascade = CascadeType.ALL)
     private User user;
+
+	public Transaction(String transactionId, String description, String merchant,
+					   Float amount, Date date, String category, User user) {
+		this.transactionId = transactionId;
+		this.description = description;
+		this.merchant = merchant;
+		this.amount = amount;
+		this.date = date;
+		this.category = category;
+		this.user = user;
+	}
+
 	public String getTransactionId() {
 		return transactionId;
 	}
