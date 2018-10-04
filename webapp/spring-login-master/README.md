@@ -33,3 +33,52 @@ Below are the steps to start the application:
 Open Postman and run
 > For creation of new user, call http://localhost:8080/user/register with POST and specify JSON data in Request body
 > For getting the current time, call http://localhost:8080/time with GET and specify authorization as 'Basic Auth' and input username, password 
+
+### Transactions workflow
+- A user can create, update, view and delete the transactions using the Postman app. Here's the transaction schema
+```
+{
+    id*	string($uuid)
+    example: d290f1ee-6c54-4b01-90e6-d701748f0851
+    description*	string
+    example: coffee
+    merchant*	string
+    example: starbucks
+    amount*	string
+    example: 2.69
+    date*	string
+    example: 09/25/2018
+    category*	string
+    example: food
+}
+```
+#### Authentication Rules for Transactions
+- All transaction requests must contain the correct user credentials and must satisfy basic auth criteria
+- Users can only edit, delete and fetch transactions created by themselves. Failing to provide correct credentials will return a unauthorized status response
+
+#### Sample Requests for Transactions
+- Transactions can be created by using ```http://localhost:8080/transaction``` API with POST action. Here's the sample request body:
+```
+{
+  "description": "coffee",
+  "merchant": "starbucks",
+  "amount": 2.69,
+  "date": "09/25/2018",
+  "category": "food"
+}
+```
+
+- Transactions created by user can be viewed by using ```http://localhost:8080/transaction``` API with GET action. 
+
+- Transactions can be updated by using ```http://localhost:8080/transaction/{id}``` API with PUT action. The "id" in path parameter is the transaction ID of transaction to be updated. Here's the sample request body:
+```
+{
+  "description": "Sandwich",
+  "merchant": "starbucks",
+  "amount": 2.99,
+  "date": "09/25/2018",
+  "category": "food"
+}
+```
+
+- Transactions can be deleted by using ```http://localhost:8080/transaction/{id}``` API with DELETE action. The "id" in path parameter is the transaction ID of transaction to be deleted
