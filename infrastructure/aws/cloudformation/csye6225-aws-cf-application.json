@@ -1,0 +1,131 @@
+﻿{
+   "Parameters":{
+      "StackName":{
+         "Description":"An stack name that will be prefixed to resource names",
+         "Type":"String"
+      },
+      "VpcId":{
+         "Description":"A vpc id for security groups",
+         "Type":"String"
+      },
+      "SubnetId":{
+         "Description":"A subnet id for EC2 instance",
+         "Type":"String"
+      }
+   },
+   "Resources":{
+      "EC2Instance":{
+         "Type":"AWS::EC2::Instance",
+         "Properties":{
+            "AvailabilityZone":"us-east-1a",
+            "BlockDeviceMappings":[
+               {
+                  "DeviceName":"/dev/sdm",
+                  "Ebs":{
+                     "VolumeSize":"20",
+                     "VolumeType":"gp2"
+                  }
+               }
+            ],
+            "DisableApiTermination":"false",
+            "ImageId":"ami-9887c6e7",
+            "InstanceType":"t2.micro",
+            "KeyName":"csye6225-keypair",
+            "SecurityGroupIds":[
+               {
+                  "Fn::GetAtt":[
+                     "InstanceSecurityGroup",
+                     "GroupId"
+                  ]
+               }
+            ],
+            "SubnetId":{
+               "Ref":"SubnetId"
+            }
+         }
+      },
+      "InstanceSecurityGroup":{
+         "Type":"AWS::EC2::SecurityGroup",
+         "Properties":{
+            "GroupName":"csye6225-webapp",
+            "GroupDescription":"Enable SSH access via port 22",
+            "VpcId":{
+               "Ref":"VpcId"
+            },
+            "SecurityGroupIngress":[
+               {
+                  "IpProtocol":"tcp",
+                  "CidrIp":"0.0.0.0/0",
+                  "FromPort":"22",
+                  "ToPort":"22"
+               },
+               {
+                  "IpProtocol":"tcp",
+                  "CidrIp":"0.0.0.0/0",
+                  "FromPort":"80",
+                  "ToPort":"80"
+               },
+               {
+                  "IpProtocol":"tcp",
+                  "CidrIp":"0.0.0.0/0",
+                  "FromPort":"443",
+                  "ToPort":"443"
+               }
+            ]
+         }
+      },
+      "DBSecurityGroup":{
+         "Type":"AWS::EC2::SecurityGroup",
+         "Properties":{
+            "GroupName":"csye6225-rds",
+            "GroupDescription":"Enable TCP traffic on 3306",
+            "VpcId":{
+               "Ref":"VpcId"
+            },
+            "SecurityGroupIngress":[
+               {
+                  "IpProtocol":"tcp",
+                  "CidrIp":"0.0.0.0/0",
+                  "FromPort":"3306",
+                  "ToPort":"3306"
+               }
+            ]
+         }
+      }
+   },
+   "Outputs":{
+      "InstanceId":{
+         "Description":"InstanceId of the newly created EC2 instance",
+         "Value":{
+            "Ref":"EC2Instance"
+         }
+      },
+      "AZ":{
+         "Description":"Availability Zone of the newly created EC2 instance",
+         "Value":{
+            "Fn::GetAtt":[
+               "EC2Instance",
+               "AvailabilityZone"
+            ]
+         }
+      },
+      "PublicDNS":{
+         "Description":"Public DNSName of the newly created EC2 instance",
+         "Value":{
+            "Fn::GetAtt":[
+               "EC2Instance",
+               "PublicDnsName"
+            ]
+         }
+      },
+      "PublicIP":{
+         "Description":"Public IP address of the newly created EC2 instance",
+         "Value":{
+            "Fn::GetAtt":[
+               "EC2Instance",
+               "PublicIp"
+            ]
+         }
+      }
+   }
+}
