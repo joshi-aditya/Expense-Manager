@@ -30,5 +30,5 @@ public class CommonConstants {
 	public static String TRANSACTION_DELETION_FAILURE = "Transaction deletion failed";
 	
 	/* Get transaction failure */
-	public static String GET_TRANSACTION_FAILURE = "Get transaction failed";
+	public static String GET_ALL_TRANSACTION_FAILURE = "Get transaction failed";
 }

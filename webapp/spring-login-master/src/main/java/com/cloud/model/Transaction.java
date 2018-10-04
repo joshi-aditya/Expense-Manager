@@ -1,8 +1,7 @@
 package com.cloud.model;
 
-import java.util.Date;
-import java.util.UUID;
 
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-
+import org.hibernate.annotations.GenericGenerator;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -22,11 +21,12 @@ import org.hibernate.annotations.GenericGenerator;
 public class Transaction {
 
 	@Id
-	@GeneratedValue
-	//GenericGenerator(name = "uuid", strategy = "uuid2")
-	@Column(name = "transaction_id")
-	private int transactionId;
-	@Column(name = "description")
+
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@Column(name = "transaction_id", columnDefinition = "BINARY(16)")
+	private UUID transactionId;
+  @Column(name = "description")
 	@NotEmpty(message = "*Please provide some description of transaction")
 	private String description;
 	@Column(name = "merchant")
@@ -48,7 +48,7 @@ public class Transaction {
 
 	}
 
-	public Transaction(int transactionId, String description, String merchant, Float amount, String date, String category,
+	public Transaction(UUID transactionId, String description, String merchant, Float amount, String date, String category,
 			User user) {
 		this.transactionId = transactionId;
 		this.description = description;
@@ -59,11 +59,11 @@ public class Transaction {
 		this.user = user;
 	}
 
-	public int getTransactionId() {
+	public UUID getTransactionId() {
 		return transactionId;
 	}
 
-	public void setTransactionId(int transactionId) {
+	public void setTransactionId(UUID transactionId) {
 		this.transactionId = transactionId;
 	}
 

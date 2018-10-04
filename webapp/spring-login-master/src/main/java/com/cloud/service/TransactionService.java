@@ -1,7 +1,7 @@
 package com.cloud.service;
 
 import java.util.List;
-
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +31,9 @@ public class TransactionService {
 	 * @param id
 	 * @throws Exception
 	 */
-	public Transaction find(Integer id) throws Exception {
+	public Transaction find(String id) throws Exception {
 
-		return transactionRepository.findByTransactionId(id);
+		return transactionRepository.findByTransactionId(UUID.fromString(id));
 
 	}
 
@@ -42,8 +42,8 @@ public class TransactionService {
 	 *
 	 * @param id
 	 */
-	public void deleteById(int id) {
-		transactionRepository.deleteById(id);
+	public void deleteById(String id) {
+		transactionRepository.deleteById(UUID.fromString(id));
 
 	}
 
