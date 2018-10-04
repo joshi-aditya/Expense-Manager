@@ -10,4 +10,13 @@ public class CommonConstants {
 
 	/* Transaction created successfully */
 	public static String TRANSACTION_CREATED = "Transaction has been created successfully";
+	
+	/* Transaction failure */
+	public static String TRANSACTION_FAILURE = "Transaction creation failed";
+	
+	/* Invalid Date format */
+	public static String INVALID_DATE_FORMAT = "Invalid date format. Please enter the date in the format : MM/DD/YYYY";
+	
+	/* Unauthorized update of transaction */
+	public static String UNAUTHORIZED = "User is not authorized to update the transaction";
 }

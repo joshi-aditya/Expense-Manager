@@ -1,30 +1,35 @@
 package com.cloud.service;
 
-import com.cloud.model.Transaction;
-import com.cloud.repository.TransactionRepository;
-
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.cloud.model.Transaction;
+import com.cloud.repository.TransactionRepository;
 
 @Service("transactionService")
 public class TransactionService {
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+	@Autowired
+	private TransactionRepository transactionRepository;
 
-    public String saveTransaction(Transaction transaction) {
+	/**
+	 * Create a new transaction for a User
+	 * @param transaction
+	 * @throws Exception
+	 */
+	public void save(Transaction transaction) throws Exception {
 
-    	try
-    	{
-    		transaction.setDate(new Date());
-    		transactionRepository.save(transaction);
-    	}
-    	catch (Exception e) {
-			System.out.println("Error is "+e);
-		}
-        return "Success";
-
-    }
+		transactionRepository.save(transaction);
+	}
+	
+	/**
+	 * Update a transaction for a User
+	 * @param id
+	 * @throws Exception
+	 */
+	public Transaction find(Integer id) throws Exception {
+		
+		return transactionRepository.findByTransactionId(id);
+		 
+	}
 }
