@@ -22,7 +22,7 @@ public class Transaction {
 
 	@Id
 	@GeneratedValue
-	//GenericGenerator(name = "uuid", strategy = "uuid2")
+  //GenericGenerator(name = "uuid", strategy = "uuid2")
 	@Column(name = "transaction_id")
 	private int transactionId;
 	@Column(name = "description")
@@ -39,7 +39,7 @@ public class Transaction {
 	@Column(name = "category")
 	// @NotEmpty(message = "*Please provide transaction category")
 	private String category;
-	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
+	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
 	@JoinColumn(name = "user_id")
 	private User user;
 
