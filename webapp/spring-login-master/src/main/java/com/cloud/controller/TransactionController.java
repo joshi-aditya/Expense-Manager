@@ -44,7 +44,7 @@ public class TransactionController {
 
 		String status = CommonConstants.TRANSACTION_CREATED;
 
-		if (Utils.validateDate(transaction.getDate())) {
+		if (true) {
 			// Fetches the current user name who is logged in
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -80,18 +80,19 @@ public class TransactionController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		try {
-			Transaction actualTransaction = transactionService.find(id);
-
-			// TODO
-			// Update the transaction with the new values
-
-			// Check if the user owns the transaction
-			if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
-				transactionService.save(transaction);
-				status = CommonConstants.TRANSACTION_UPDATED;
-			} else {
-				status = CommonConstants.UNAUTHORIZED;				
-			}
+			Transaction actualTransaction  = transactionService.find(id);
+     		 
+     		//Update the transaction with the new values
+			actualTransaction = this.setTransactionData(transaction, actualTransaction);
+     		//Check if the user owns the transaction
+    		if(actualTransaction.getUser().getEmail().equalsIgnoreCase(auth.getName()))
+    		{
+    			transactionService.save(actualTransaction);
+    		}
+     		else
+     		{
+     			status = CommonConstants.UNAUTHORIZED;
+     		}
 		} catch (Exception e) {
 			status = CommonConstants.TRANSACTION_FAILURE + " : " + e.getMessage();
 		}
@@ -100,7 +101,18 @@ public class TransactionController {
 	    response.setCharacterEncoding("UTF-8");
 	    response.getWriter().write(json);
 	}
-	
+
+	private Transaction setTransactionData(Transaction transaction, Transaction actualTransaction) {
+
+    	actualTransaction.setAmount(transaction.getAmount());
+    	actualTransaction.setDate(transaction.getDate());
+    	actualTransaction.setCategory(transaction.getCategory());
+    	actualTransaction.setDescription(transaction.getDescription());
+    	actualTransaction.setMerchant(transaction.getMerchant());
+
+    	return actualTransaction;
+	}
+    
 	/**
 	 * Deletes the transaction
 	 * 
@@ -159,5 +171,6 @@ public class TransactionController {
 			status = CommonConstants.GET_TRANSACTION_FAILURE + ":" + e.getMessage();
 		}			    
 	}
+    
 
 }
