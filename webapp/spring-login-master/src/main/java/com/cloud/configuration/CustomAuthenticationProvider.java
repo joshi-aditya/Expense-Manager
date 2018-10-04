@@ -32,13 +32,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String password = authentication.getCredentials().toString();
 		User user = userRepository.findByEmail(email);
 
-		if (email.equalsIgnoreCase(user.getEmail()) 
-				&& bCryptPasswordEncoder().matches(password, user.getPassword())) 
+		if(null != email && null != password && user != null)
 		{
-			return new UsernamePasswordAuthenticationToken(email, password, new ArrayList<>());
-		} else {
-			return null;
+			if (email.equalsIgnoreCase(user.getEmail()) 
+					&& bCryptPasswordEncoder().matches(password, user.getPassword())) 
+			{
+				return new UsernamePasswordAuthenticationToken(email, password, new ArrayList<>());
+			} else {
+				return null;
+			}
 		}
+		
+		return null;
+		
 	}
 
 	@Override
