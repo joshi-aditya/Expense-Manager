@@ -2,6 +2,9 @@ package com.cloud.service;
 
 import com.cloud.model.Transaction;
 import com.cloud.repository.TransactionRepository;
+
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +14,17 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public Transaction saveTransaction(Transaction transaction) {
+    public String saveTransaction(Transaction transaction) {
 
-        return transactionRepository.save(transaction);
+    	try
+    	{
+    		transaction.setDate(new Date());
+    		transactionRepository.save(transaction);
+    	}
+    	catch (Exception e) {
+			System.out.println("Error is "+e);
+		}
+        return "Success";
 
     }
 }
