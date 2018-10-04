@@ -10,6 +10,9 @@ public class CommonConstants {
 
 	/* Transaction created successfully */
 	public static String TRANSACTION_CREATED = "Transaction has been created successfully";
+
+	/* Transaction updated successfully */
+	public static String TRANSACTION_UPDATED = "Transaction has been updated successfully";
 	
 	/* Transaction failure */
 	public static String TRANSACTION_FAILURE = "Transaction creation failed";

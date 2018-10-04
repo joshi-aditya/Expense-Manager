@@ -69,11 +69,11 @@ public class TransactionController {
      * Create the transaction for the logged in user
      * @return String
      */
-    @RequestMapping(value = "/transaction", method = RequestMethod.PUT)
+    @RequestMapping(value = "/transaction/{id}", method = RequestMethod.PUT)
     @ResponseBody
     public String update(@PathVariable Integer id, @RequestBody Transaction transaction) {
 
-    	String status = CommonConstants.TRANSACTION_CREATED;
+    	String status = CommonConstants.TRANSACTION_UPDATED;
     	//Fetches the current user name who is logged in
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     	
@@ -81,13 +81,13 @@ public class TransactionController {
     	{
     		Transaction actualTransaction  = transactionService.find(id);
     		 
-    		//TODO
     		//Update the transaction with the new values
-    		
+			actualTransaction = this.setTransactionData(transaction, actualTransaction);
+
     		//Check if the user owns the transaction
     		if(transaction.getUser().getEmail().equalsIgnoreCase(auth.getName()))
     		{
-    			transactionService.save(transaction);
+    			transactionService.save(actualTransaction);
     		}
     		else
     		{
@@ -102,6 +102,17 @@ public class TransactionController {
         return status;
 
     }
+
+    private Transaction setTransactionData(Transaction transaction, Transaction actualTransaction) {
+
+    	actualTransaction.setAmount(transaction.getAmount());
+    	actualTransaction.setDate(transaction.getDate());
+    	actualTransaction.setCategory(transaction.getCategory());
+    	actualTransaction.setDescription(transaction.getDescription());
+    	actualTransaction.setMerchant(transaction.getMerchant());
+
+    	return actualTransaction;
+	}
     
     
 

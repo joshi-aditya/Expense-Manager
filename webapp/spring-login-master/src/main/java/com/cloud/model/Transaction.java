@@ -1,6 +1,7 @@
 package com.cloud.model;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @Entity
@@ -19,10 +21,9 @@ import lombok.Data;
 public class Transaction {
 
 	@Id
-	@GeneratedValue
-	 //GenericGenerator(name = "uuid", strategy = "uuid2")
-	@Column(name = "transaction_id")
-	private int transactionId;
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	private UUID transactionId;
 	@Column(name = "description")
 	@NotEmpty(message = "*Please provide some description of transaction")
 	private String description;
@@ -46,7 +47,7 @@ public class Transaction {
 		
 	}
 	
-	public Transaction(int transactionId, String description, String merchant, Float amount, Date date,
+	public Transaction(UUID transactionId, String description, String merchant, Float amount, Date date,
 			String category, User user) {
 		super();
 		this.transactionId = transactionId;
@@ -58,11 +59,11 @@ public class Transaction {
 		this.user = user;
 	}
 
-	public int getTransactionId() {
+	public UUID getTransactionId() {
 		return transactionId;
 	}
 
-	public void setTransactionId(int transactionId) {
+	public void setTransactionId(UUID transactionId) {
 		this.transactionId = transactionId;
 	}
 
