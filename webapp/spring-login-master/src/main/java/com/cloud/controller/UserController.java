@@ -47,5 +47,11 @@ public class UserController {
         userService.saveUser(user);
         return CommonConstants.USER_REGISTERATION_SUCCESS;
     }
+    
+    /**
+     * Added the function to get transaction for authenticated users
+     * @return String 
+     */
+    
 
 }

@@ -7,4 +7,22 @@ public class CommonConstants {
 	
 	/* User registered successfully */
 	public static String USER_REGISTERATION_SUCCESS = "User has been registered successfully";
+
+	/* Transaction created successfully */
+	public static String TRANSACTION_CREATED = "Transaction has been created successfully";
+	
+	/* Transaction failure */
+	public static String TRANSACTION_FAILURE = "Transaction creation failed";
+	
+	/* Invalid Date format */
+	public static String INVALID_DATE_FORMAT = "Invalid date format. Please enter the date in the format : MM/DD/YYYY";
+	
+	/* Unauthorized update of transaction */
+	public static String UNAUTHORIZED = "User is not authorized to modify the transaction";
+	
+	/* Transaction deleted successfully */
+	public static String TRANSACTION_DELETED = "Transaction has been deleted successfully";
+	
+	/* Transaction deletion failure */
+	public static String TRANSACTION_DELETION_FAILURE = "Transaction deletion failed";
 }
