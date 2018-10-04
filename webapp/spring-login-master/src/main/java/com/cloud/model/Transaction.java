@@ -20,12 +20,11 @@ import lombok.Data;
 public class Transaction {
 
 	@Id
-
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(name = "transaction_id", columnDefinition = "BINARY(16)")
 	private UUID transactionId;
-  @Column(name = "description")
+    @Column(name = "description")
 	@NotEmpty(message = "*Please provide some description of transaction")
 	private String description;
 	@Column(name = "merchant")

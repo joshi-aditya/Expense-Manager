@@ -38,8 +38,7 @@ public class TransactionService {
 	}
 
 	/**
-	 * Deletes the trasaction by transaction Id
-	 *
+	 * Deletes the transaction by transaction Id
 	 * @param id
 	 */
 	public void deleteById(String id) {
