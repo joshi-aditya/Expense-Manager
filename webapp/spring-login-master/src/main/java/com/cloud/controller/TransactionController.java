@@ -1,6 +1,8 @@
 package com.cloud.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -44,14 +46,15 @@ public class TransactionController {
 
 		String status = CommonConstants.TRANSACTION_CREATED;
 
-		if (true) {
+		if (Utils.validateDate(transaction.getDate().toString())) {
 			// Fetches the current user name who is logged in
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 			try {
 				User user = userService.findUserByEmail(auth.getName());
 				transaction.setUser(user);
-				transaction.setDate(transaction.getDate());
+				SimpleDateFormat sf = new SimpleDateFormat(transaction.getDate().toString());
+				transaction.setDate(sf.format(new Date()));
 				transactionService.save(transaction);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
