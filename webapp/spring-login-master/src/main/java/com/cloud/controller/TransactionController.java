@@ -114,6 +114,34 @@ public class TransactionController {
     	return actualTransaction;
 	}
     
+	/**
+	 * Deletes the transaction
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/transaction/{id}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public String delete(@PathVariable Integer id) {
+		String status = CommonConstants.TRANSACTION_DELETED;
+		// Fetches the current user name who is logged in
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		try {
+			Transaction transaction = transactionService.find(id);
+
+			if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
+				transactionService.deleteById(id);
+			} else {
+				status = CommonConstants.UNAUTHORIZED;
+			}
+		} catch (Exception e) {
+			status = CommonConstants.TRANSACTION_DELETION_FAILURE + ":" + e.getMessage();
+		}
+
+		return status;
+
+	}
     
 
 }

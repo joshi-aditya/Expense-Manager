@@ -22,4 +22,10 @@ public class CommonConstants {
 	
 	/* Unauthorized update of transaction */
 	public static String UNAUTHORIZED = "User is not authorized to update the transaction";
+	
+	/* Transaction deleted successfully */
+	public static String TRANSACTION_DELETED = "Transaction has been deleted successfully";
+	
+	/* Transaction deletion failure */
+	public static String TRANSACTION_DELETION_FAILURE = "Transaction deletion failed";
 }
