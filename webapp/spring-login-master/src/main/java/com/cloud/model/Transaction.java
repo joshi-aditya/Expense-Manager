@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.GenericGenerator;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @Entity
