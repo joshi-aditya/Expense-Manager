@@ -11,20 +11,9 @@ public class Utils {
 	 */
 	public static boolean validateDate(String date)
 	{
-		boolean isValid = false;
+		boolean isValid = true;
 
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		String dateInString = "07/06/2013";
 
-		try {
-
-			Date formattedDate = formatter.parse(dateInString);
-			formatter.format(formattedDate);
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
 		return isValid;
 	}
 }

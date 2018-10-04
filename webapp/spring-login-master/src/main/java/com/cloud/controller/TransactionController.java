@@ -36,7 +36,7 @@ public class TransactionController {
 
     	String status = CommonConstants.TRANSACTION_CREATED;
     	
-    	if(Utils.validateDate(transaction.getDate()))
+    	if(true)
     	{
     		//Fetches the current user name who is logged in
         	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -85,7 +85,7 @@ public class TransactionController {
 			actualTransaction = this.setTransactionData(transaction, actualTransaction);
 
     		//Check if the user owns the transaction
-    		if(transaction.getUser().getEmail().equalsIgnoreCase(auth.getName()))
+    		if(actualTransaction.getUser().getEmail().equalsIgnoreCase(auth.getName()))
     		{
     			transactionService.save(actualTransaction);
     		}

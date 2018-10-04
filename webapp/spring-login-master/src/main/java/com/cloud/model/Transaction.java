@@ -23,9 +23,10 @@ import org.hibernate.annotations.GenericGenerator;
 public class Transaction {
 
 	@Id
-	@GeneratedValue(generator = "uuid2")
-	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-	private UUID transactionId;
+	@GeneratedValue
+//	@GeneratedValue(generator = "uuid2")
+//	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	private int transactionId;
 	@Column(name = "description")
 	@NotEmpty(message = "*Please provide some description of transaction")
 	private String description;
@@ -48,7 +49,7 @@ public class Transaction {
 
 	}
 
-	public Transaction(UUID transactionId, String description, String merchant, Float amount, Date date, String category,
+	public Transaction(int transactionId, String description, String merchant, Float amount, Date date, String category,
 			User user) {
 		this.transactionId = transactionId;
 		this.description = description;
@@ -59,11 +60,11 @@ public class Transaction {
 		this.user = user;
 	}
 
-	public UUID getTransactionId() {
+	public int getTransactionId() {
 		return transactionId;
 	}
 
-	public void setTransactionId(UUID transactionId) {
+	public void setTransactionId(int transactionId) {
 		this.transactionId = transactionId;
 	}
 
