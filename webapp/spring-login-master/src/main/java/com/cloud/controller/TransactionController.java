@@ -44,6 +44,7 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction", method = RequestMethod.POST)
 	@ResponseBody
 	public void create(@RequestBody Transaction transaction, HttpServletResponse response) throws IOException {
+
 		String status = CommonConstants.TRANSACTION_CREATED;
 
 		if (Utils.validateDate(transaction.getDate().toString())) {
@@ -99,6 +100,7 @@ public class TransactionController {
 		} catch (Exception e) {
 			status = CommonConstants.TRANSACTION_FAILURE + " : " + e.getMessage();
 		}
+
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(status);
 		response.setContentType("application/json");
@@ -142,6 +144,7 @@ public class TransactionController {
 		} catch (Exception e) {
 			status = CommonConstants.TRANSACTION_DELETION_FAILURE + ":" + e.getMessage();
 		}
+
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(status);
 		response.setContentType("application/json");
