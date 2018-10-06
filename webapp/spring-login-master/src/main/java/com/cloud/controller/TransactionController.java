@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +31,8 @@ import com.google.gson.GsonBuilder;
 @RestController
 public class TransactionController {
 
+	private static final Logger logger = LogManager.getLogger(TransactionController.class);
+	
 	@Autowired
 	private TransactionService transactionService;
 
@@ -45,6 +49,8 @@ public class TransactionController {
 	@ResponseBody
 	public void create(@RequestBody Transaction transaction, HttpServletResponse response) throws IOException {
 
+		logger.info("Create Transaction - Start");
+		
 		String status = CommonConstants.TRANSACTION_CREATED;
 
 		if (Utils.validateDate(transaction.getDate().toString())) {
@@ -70,6 +76,8 @@ public class TransactionController {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(json);
+		
+		logger.info("Create Transaction - End");
 	}
 
 	/**
@@ -82,6 +90,9 @@ public class TransactionController {
 	@ResponseBody
 	public void update(@PathVariable String id, @RequestBody Transaction transaction, HttpServletResponse response)
 			throws IOException {
+		
+		logger.info("Update Transaction - Start");
+		
 		String status = CommonConstants.TRANSACTION_UPDATED;
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -106,17 +117,8 @@ public class TransactionController {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(json);
-	}
-
-	private Transaction setTransactionData(Transaction transaction, Transaction actualTransaction) {
-
-		actualTransaction.setAmount(transaction.getAmount());
-		actualTransaction.setDate(transaction.getDate());
-		actualTransaction.setCategory(transaction.getCategory());
-		actualTransaction.setDescription(transaction.getDescription());
-		actualTransaction.setMerchant(transaction.getMerchant());
-
-		return actualTransaction;
+		
+		logger.info("Update Transaction - End");
 	}
 
 	/**
@@ -129,6 +131,9 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public void delete(@PathVariable String id, HttpServletResponse response) throws IOException {
+		
+		logger.info("Delete Transaction - Start");
+		
 		String status = CommonConstants.TRANSACTION_DELETED;
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -150,6 +155,8 @@ public class TransactionController {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(json);
+		
+		logger.info("Delete Transaction - End");
 
 	}
 
@@ -163,6 +170,9 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction", method = RequestMethod.GET)
 	@ResponseBody
 	public void findByUserId(HttpServletResponse response) throws IOException {
+		
+		logger.info("Find Transactions by User : Start");
+		
 		// Fetches the current user name who is logged in
 		String status = CommonConstants.GET_ALL_TRANSACTION_FAILURE;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -180,6 +190,30 @@ public class TransactionController {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(json);
+		
+		logger.info("Find Transactions by User : Start");
 	}
+	
+	/**
+	 * Added to set the Transaction data
+	 * @param transaction
+	 * @param actualTransaction
+	 * @return
+	 */
+	private Transaction setTransactionData(Transaction transaction, Transaction actualTransaction) {
+
+		logger.info("Set Transaction Data - Start");
+		
+		actualTransaction.setAmount(transaction.getAmount());
+		actualTransaction.setDate(transaction.getDate());
+		actualTransaction.setCategory(transaction.getCategory());
+		actualTransaction.setDescription(transaction.getDescription());
+		actualTransaction.setMerchant(transaction.getMerchant());
+
+		logger.info("Set Transaction Data - End");
+		
+		return actualTransaction;
+	}
+
 
 }
