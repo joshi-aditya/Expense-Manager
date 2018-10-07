@@ -16,17 +16,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cloud.constants.CommonConstants;
+import com.cloud.model.Attachment;
+import com.cloud.model.AttachmentWrapper;
+import com.cloud.model.Status;
 import com.cloud.model.Transaction;
+import com.cloud.model.TransactionWrapper;
 import com.cloud.model.User;
+import com.cloud.service.AmazonClient;
 import com.cloud.service.TransactionService;
 import com.cloud.service.UserService;
 import com.cloud.util.Utils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @RestController
 public class TransactionController {
@@ -38,7 +43,44 @@ public class TransactionController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private AmazonClient amazonClient;
 
+
+	/**
+	 * Gets the user's transaction
+	 * 
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/transaction", method = RequestMethod.GET)
+	@ResponseBody
+	public TransactionWrapper findByUserId(HttpServletResponse response) throws IOException {
+		
+		logger.info("Find Transactions by User : Start");
+		
+		TransactionWrapper transactions = new TransactionWrapper();
+		transactions.setStatus( CommonConstants.GET_ALL_TRANSACTION_FAILURE);
+		
+		// Fetches the current user name who is logged in
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			User user = userService.findUserByEmail(auth.getName());
+			List<Transaction> transactionList = transactionService.findByUserId(user.getId());
+			transactions.setTransactions(transactionList);
+			transactions.setStatus(CommonConstants.SUCCESS);
+		} catch (Exception e) {
+			logger.error("Get all transactions for user failed");
+			transactions.setStatus(CommonConstants.GET_ALL_TRANSACTION_FAILURE + ":" + e.getMessage());
+		}
+
+		logger.info("Find Transactions by User : End");
+		
+		return transactions;
+	}
+	
 	/**
 	 * Create the transaction for the logged in user
 	 * 
@@ -47,37 +89,38 @@ public class TransactionController {
 	 */
 	@RequestMapping(value = "/transaction", method = RequestMethod.POST)
 	@ResponseBody
-	public void create(@RequestBody Transaction transaction, HttpServletResponse response) throws IOException {
+	public Status create(@RequestBody Transaction transaction, HttpServletResponse response) throws IOException {
 
 		logger.info("Create Transaction - Start");
-		
-		String status = CommonConstants.TRANSACTION_CREATED;
 
-		if (Utils.validateDate(transaction.getDate().toString())) {
-			// Fetches the current user name who is logged in
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Status status = new Status();
 
-			try {
+		try {
+			if (Utils.validateDate(transaction.getDate().toString())) {
+				// Fetches the current user name who is logged in
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 				User user = userService.findUserByEmail(auth.getName());
 				transaction.setUser(user);
+				// Setting an empty attachment
+				transaction.setAttachments(null);
 				SimpleDateFormat sf = new SimpleDateFormat(transaction.getDate().toString());
 				transaction.setDate(sf.format(new Date()));
 				transactionService.save(transaction);
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				status = CommonConstants.TRANSACTION_FAILURE + " : " + e.getMessage();
+				status.setStatus(CommonConstants.SUCCESS);
+
+			} else {
+				logger.info("Unauthorized user");
+				status.setStatus(CommonConstants.INVALID_DATE_FORMAT);
 			}
-		} else {
-			status = CommonConstants.INVALID_DATE_FORMAT;
+		} catch (Exception e) {
+			logger.error("Create transaction failed");
+			status.setStatus(CommonConstants.TRANSACTION_FAILURE + ":" + e.getMessage());
 		}
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(status);
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(json);
-		
 		logger.info("Create Transaction - End");
+
+		return status;
 	}
 
 	/**
@@ -88,37 +131,37 @@ public class TransactionController {
 	 */
 	@RequestMapping(value = "/transaction/{id}", method = RequestMethod.PUT)
 	@ResponseBody
-	public void update(@PathVariable String id, @RequestBody Transaction transaction, HttpServletResponse response)
+	public Status update(@PathVariable String id, @RequestBody Transaction transaction, HttpServletResponse response)
 			throws IOException {
 		
 		logger.info("Update Transaction - Start");
 		
-		String status = CommonConstants.TRANSACTION_UPDATED;
+		Status status = new Status();
+		status.setStatus(CommonConstants.TRANSACTION_UPDATED);
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		try {
 			Transaction actualTransaction = transactionService.find(id);
 
-			// Update the transaction with the new values
-			actualTransaction = this.setTransactionData(transaction, actualTransaction);
 			// Check if the user owns the transaction
 			if (actualTransaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
+				// Update the transaction with the new values
+				actualTransaction = this.setTransactionData(transaction, actualTransaction);
 				transactionService.save(actualTransaction);
+				status.setStatus(CommonConstants.SUCCESS);
 			} else {
-				status = CommonConstants.UNAUTHORIZED;
+				logger.info("Unauthorized user");
+				status.setStatus(CommonConstants.UNAUTHORIZED);
 			}
 		} catch (Exception e) {
-			status = CommonConstants.TRANSACTION_FAILURE + " : " + e.getMessage();
+			logger.error("Update transaction failed");
+			status.setStatus(CommonConstants.TRANSACTION_FAILURE + " : " + e.getMessage());
 		}
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(status);
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(json);
-		
 		logger.info("Update Transaction - End");
+		
+		return status;
 	}
 
 	/**
@@ -130,11 +173,11 @@ public class TransactionController {
 	 */
 	@RequestMapping(value = "/transaction/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public void delete(@PathVariable String id, HttpServletResponse response) throws IOException {
+	public Status delete(@PathVariable String id, HttpServletResponse response) throws IOException {
 		
 		logger.info("Delete Transaction - Start");
 		
-		String status = CommonConstants.TRANSACTION_DELETED;
+		Status status = new Status();
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -143,55 +186,116 @@ public class TransactionController {
 
 			if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
 				transactionService.deleteById(id);
+				status.setStatus(CommonConstants.SUCCESS);
 			} else {
-				status = CommonConstants.UNAUTHORIZED;
+				logger.info("Unauthorized user");
+				status.setStatus(CommonConstants.UNAUTHORIZED);
 			}
 		} catch (Exception e) {
-			status = CommonConstants.TRANSACTION_DELETION_FAILURE + ":" + e.getMessage();
+			logger.error("Delete transactions failed");
+			status.setStatus(CommonConstants.TRANSACTION_DELETION_FAILURE + ":" + e.getMessage());
 		}
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(status);
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(json);
-		
 		logger.info("Delete Transaction - End");
+		
+		return status;
 
+	}
+	
+	/**
+	 * Added to upload a receipt to a transaction
+	 * @param file
+	 * @return
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.GET)
+    public AttachmentWrapper getReceipt(@PathVariable String id, HttpServletResponse response) throws IOException {
+		
+		logger.info("Get Transaction Receipt with id : "+ id + "Start");
+		
+		AttachmentWrapper attachmentWrapper = new AttachmentWrapper();
+		List<Attachment> attachmentList = null;
+		
+		//Fetches all the attachments in the transaction
+		try {
+			
+			Transaction transaction = transactionService.find(id);
+			attachmentList = transaction.getAttachments();
+			attachmentWrapper.setAttachments(attachmentList);
+			attachmentWrapper.setStatus(CommonConstants.SUCCESS);
+			
+		} catch (Exception e) {
+			logger.error("Get transaction receipts failed");
+			attachmentWrapper.setStatus(CommonConstants.GET_ATTACHMENTS_FAILURE + ":" + e.getMessage());
+		}
+		
+		logger.info("Get Transaction Receipt with id : "+ id + "- End");
+		
+		return attachmentWrapper;
+    }
+	
+	/**
+	 * Added to upload a receipt to a transaction
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.POST)
+	public Status uploadReceipt(@PathVariable String id, @RequestPart(value = "file") MultipartFile file) {
+
+		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
+		
+		Status status = new Status();
+
+		try 
+		{
+			// Upload the receipt to s3 bucket
+			String uri = this.amazonClient.uploadFile(file);
+
+			// Save the metadata of the receipt in the database attachment table
+			transactionService.saveAttachment(id, uri);
+			status.setStatus(CommonConstants.SUCCESS);
+			
+		} catch (Exception e) {
+			
+			status.setStatus(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE);
+			logger.error("Error while attaching the receipt");
+		}
+
+		logger.info("Attach Transaction Receipt with id : " + id + " - End");
+		
+		return status;
 	}
 
 	/**
-	 * Gets the user's transaction
-	 * 
-	 * @param id
+	 * Added to delete a receipt to a transaction
+	 * @param file
 	 * @return
-	 * @throws IOException
+	 * @throws IOException 
 	 */
-	@RequestMapping(value = "/transaction", method = RequestMethod.GET)
-	@ResponseBody
-	public void findByUserId(HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.DELETE)
+	public Status deleteAttachment(@PathVariable String id, @RequestPart(value = "url") String idAttachments,
+			HttpServletResponse response) throws IOException {
+
+		logger.info("Delete Transaction Receipt with id : " + id + "- Start");
 		
-		logger.info("Find Transactions by User : Start");
-		
-		// Fetches the current user name who is logged in
-		String status = CommonConstants.GET_ALL_TRANSACTION_FAILURE;
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Status status = new Status();
+
+		// Save the metadata of the receipt in the database attachment table
 		try {
-			User user = userService.findUserByEmail(auth.getName());
-			List<Transaction> getAllTransaction = transactionService.findByUserId(user.getId());
-			status = new Gson().toJson(getAllTransaction);
-
+			
+			String result = this.amazonClient.deleteFileFromS3Bucket(idAttachments);
+			transactionService.deleteAttachment(id, idAttachments);
+			status.setStatus(result);
+			
 		} catch (Exception e) {
-			status = CommonConstants.GET_ALL_TRANSACTION_FAILURE + ":" + e.getMessage();
-		}
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(status);
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(json);
+			status.setStatus(CommonConstants.DELETE_ATTACHMENTS_FAILURE + e.getMessage());
+		}
 		
-		logger.info("Find Transactions by User : Start");
+		logger.info("Delete Transaction Receipt with id : " + id + "- End");
+		
+		return status;
+
 	}
 	
 	/**

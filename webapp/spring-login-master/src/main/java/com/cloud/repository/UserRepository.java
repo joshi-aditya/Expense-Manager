@@ -7,5 +7,6 @@ import com.cloud.model.User;
 
 @Repository("userRepository")
 public interface UserRepository extends CrudRepository<User, Long> {
-    User findByEmail(String email);
+    
+	User findByEmail(String email);
 }

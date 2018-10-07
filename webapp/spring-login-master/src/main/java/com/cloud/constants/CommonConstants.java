@@ -2,6 +2,9 @@ package com.cloud.constants;
 
 public class CommonConstants {
 
+	/* Success */
+	public static String SUCCESS = "Success";
+	
 	/* User already exists in the database */
 	public static String USER_ALREADY_EXISTS = "There is already a user registered with the email provided";
 	
@@ -31,4 +34,13 @@ public class CommonConstants {
 	
 	/* Get transaction failure */
 	public static String GET_ALL_TRANSACTION_FAILURE = "Get transaction failed";
+	
+	/* Get transaction failure */
+	public static String GET_ATTACHMENTS_FAILURE = "Get attachments for transaction failed";
+	
+	/* Upload attachments failure */
+	public static String UPLOAD_ATTACHMENTS_FAILURE = "Upload attachment for transaction failed";
+	
+	/* Delete attachments failure */
+	public static String DELETE_ATTACHMENTS_FAILURE = "Delete attachment for transaction failed";
 }

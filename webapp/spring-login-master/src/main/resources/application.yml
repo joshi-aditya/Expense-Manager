@@ -1,0 +1,6 @@
+amazonProperties:
+  endpointUrl: http://s3.amazonaws.com
+  accessKey: AKIAJLLHSE56WYE27JLA
+  secretKey: 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
+  bucketName: csye6225-fall2018-testbucket
+ 
