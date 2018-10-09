@@ -43,4 +43,7 @@ public class CommonConstants {
 	
 	/* Delete attachments failure */
 	public static String DELETE_ATTACHMENTS_FAILURE = "Delete attachment for transaction failed";
+	
+	/* Attachment deleted successfully */
+	public static String DELETE_ATTACHMENTS_SUCCESS = "Deleted Successfully";
 }

@@ -1,5 +1,7 @@
 package com.cloud.util;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Utils {
 
 	/**
@@ -16,4 +18,13 @@ public class Utils {
 
 		return isValid;
 	}
+	
+	/**
+	 * Added to generate a file name without spaces
+	 * @param multiPart
+	 * @return
+	 */
+	 public static String generateFileName(MultipartFile multiPart) {
+	        return multiPart.getOriginalFilename().replace(" ", "_");
+	    }
 }

@@ -28,7 +28,7 @@ import com.cloud.model.Status;
 import com.cloud.model.Transaction;
 import com.cloud.model.TransactionWrapper;
 import com.cloud.model.User;
-import com.cloud.service.AmazonClient;
+import com.cloud.service.BaseClient;
 import com.cloud.service.TransactionService;
 import com.cloud.service.UserService;
 import com.cloud.util.Utils;
@@ -45,7 +45,7 @@ public class TransactionController {
 	private UserService userService;
 	
 	@Autowired
-	private AmazonClient amazonClient;
+	private BaseClient baseClient;
 
 
 	/**
@@ -248,11 +248,12 @@ public class TransactionController {
 
 		try 
 		{
-			// Upload the receipt to s3 bucket
-			String uri = this.amazonClient.uploadFile(file);
+			// Upload the receipt
+			String uri = baseClient.uploadFile(file);
 
 			// Save the metadata of the receipt in the database attachment table
 			transactionService.saveAttachment(id, uri);
+			status.setMessage(uri);
 			status.setStatus(CommonConstants.SUCCESS);
 			
 		} catch (Exception e) {
@@ -283,7 +284,7 @@ public class TransactionController {
 		// Save the metadata of the receipt in the database attachment table
 		try {
 			
-			String result = this.amazonClient.deleteFileFromS3Bucket(idAttachments);
+			String result = baseClient.deleteFile(idAttachments);
 			transactionService.deleteAttachment(id, idAttachments);
 			status.setStatus(result);
 			
