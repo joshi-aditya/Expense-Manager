@@ -17,7 +17,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "attachment")
-public class Attachment extends Status{
+public class Attachment{
 
 	@Id
 	@GeneratedValue(generator = "uuid2")

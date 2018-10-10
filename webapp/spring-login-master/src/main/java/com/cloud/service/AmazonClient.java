@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -38,8 +39,8 @@ public class AmazonClient implements BaseClient{
 
 	@PostConstruct
 	private void initializeAmazon() {
-		BasicAWSCredentials creds = new BasicAWSCredentials(this.accessKey, this.secretKey);
-		this.s3client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(creds)).build();
+		//BasicAWSCredentials creds = new BasicAWSCredentials(this.accessKey, this.secretKey); 
+		this.s3client = AmazonS3ClientBuilder.standard().withCredentials(new InstanceProfileCredentialsProvider(false)).build();
 	}
 	
 	@Override

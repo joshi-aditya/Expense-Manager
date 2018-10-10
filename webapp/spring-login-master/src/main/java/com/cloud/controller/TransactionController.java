@@ -62,7 +62,6 @@ public class TransactionController {
 		logger.info("Find Transactions by User : Start");
 		
 		TransactionWrapper transactions = new TransactionWrapper();
-		transactions.setStatus( CommonConstants.GET_ALL_TRANSACTION_FAILURE);
 		
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -70,10 +69,12 @@ public class TransactionController {
 			User user = userService.findUserByEmail(auth.getName());
 			List<Transaction> transactionList = transactionService.findByUserId(user.getId());
 			transactions.setTransactions(transactionList);
-			transactions.setStatus(CommonConstants.SUCCESS);
+			transactions.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+			transactions.setMessage(CommonConstants.SUCCESS);
 		} catch (Exception e) {
 			logger.error("Get all transactions for user failed");
-			transactions.setStatus(CommonConstants.GET_ALL_TRANSACTION_FAILURE + ":" + e.getMessage());
+			transactions.setStatusCode(CommonConstants.StatusCodes.GET_ALL_TRANSACTIONS_FAILURE);
+			transactions.setMessage(CommonConstants.GET_ALL_TRANSACTION_FAILURE + ":" + e.getMessage());
 		}
 
 		logger.info("Find Transactions by User : End");
@@ -107,15 +108,18 @@ public class TransactionController {
 				SimpleDateFormat sf = new SimpleDateFormat(transaction.getDate().toString());
 				transaction.setDate(sf.format(new Date()));
 				transactionService.save(transaction);
-				status.setStatus(CommonConstants.SUCCESS);
+				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+				status.setMessage(CommonConstants.SUCCESS);
 
 			} else {
 				logger.info("Unauthorized user");
-				status.setStatus(CommonConstants.INVALID_DATE_FORMAT);
+				status.setStatusCode(CommonConstants.StatusCodes.INVALID_DATE_FORMAT);
+				status.setMessage(CommonConstants.INVALID_DATE_FORMAT);
 			}
 		} catch (Exception e) {
 			logger.error("Create transaction failed");
-			status.setStatus(CommonConstants.TRANSACTION_FAILURE + ":" + e.getMessage());
+			status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_CREATION_FAILURE);
+			status.setMessage(CommonConstants.TRANSACTION_FAILURE + ":" + e.getMessage());
 		}
 
 		logger.info("Create Transaction - End");
@@ -137,7 +141,6 @@ public class TransactionController {
 		logger.info("Update Transaction - Start");
 		
 		Status status = new Status();
-		status.setStatus(CommonConstants.TRANSACTION_UPDATED);
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -149,14 +152,17 @@ public class TransactionController {
 				// Update the transaction with the new values
 				actualTransaction = this.setTransactionData(transaction, actualTransaction);
 				transactionService.save(actualTransaction);
-				status.setStatus(CommonConstants.SUCCESS);
+				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+				status.setMessage(CommonConstants.SUCCESS);
 			} else {
 				logger.info("Unauthorized user");
-				status.setStatus(CommonConstants.UNAUTHORIZED);
+				status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
+				status.setMessage(CommonConstants.UNAUTHORIZED);
 			}
 		} catch (Exception e) {
 			logger.error("Update transaction failed");
-			status.setStatus(CommonConstants.TRANSACTION_FAILURE + " : " + e.getMessage());
+			status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_UPDATION_FAILURE);
+			status.setMessage(CommonConstants.TRANSACTION_FAILURE + " : " + e.getMessage());
 		}
 
 		logger.info("Update Transaction - End");
@@ -186,14 +192,17 @@ public class TransactionController {
 
 			if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
 				transactionService.deleteById(id);
-				status.setStatus(CommonConstants.SUCCESS);
+				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+				status.setMessage(CommonConstants.SUCCESS);
 			} else {
 				logger.info("Unauthorized user");
-				status.setStatus(CommonConstants.UNAUTHORIZED);
+				status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
+				status.setMessage(CommonConstants.UNAUTHORIZED);
 			}
 		} catch (Exception e) {
 			logger.error("Delete transactions failed");
-			status.setStatus(CommonConstants.TRANSACTION_DELETION_FAILURE + ":" + e.getMessage());
+			status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_DELETION_FAILURE);
+			status.setMessage(CommonConstants.TRANSACTION_DELETION_FAILURE + ":" + e.getMessage());
 		}
 
 		logger.info("Delete Transaction - End");
@@ -222,11 +231,13 @@ public class TransactionController {
 			Transaction transaction = transactionService.find(id);
 			attachmentList = transaction.getAttachments();
 			attachmentWrapper.setAttachments(attachmentList);
-			attachmentWrapper.setStatus(CommonConstants.SUCCESS);
+			attachmentWrapper.setMessage(CommonConstants.SUCCESS);
+			attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 			
 		} catch (Exception e) {
 			logger.error("Get transaction receipts failed");
-			attachmentWrapper.setStatus(CommonConstants.GET_ATTACHMENTS_FAILURE + ":" + e.getMessage());
+			attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.GET_ATTACHMENT_FAILURE);
+			attachmentWrapper.setMessage(CommonConstants.GET_ATTACHMENTS_FAILURE + ":" + e.getMessage());
 		}
 		
 		logger.info("Get Transaction Receipt with id : "+ id + "- End");
@@ -254,11 +265,12 @@ public class TransactionController {
 			// Save the metadata of the receipt in the database attachment table
 			transactionService.saveAttachment(id, uri);
 			status.setMessage(uri);
-			status.setStatus(CommonConstants.SUCCESS);
+			status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 			
 		} catch (Exception e) {
 			
-			status.setStatus(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE);
+			status.setStatusCode(CommonConstants.StatusCodes.UPLOAD_ATTACHMENT_FAILURE);
+			status.setMessage(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE + e.getMessage());
 			logger.error("Error while attaching the receipt");
 		}
 
@@ -286,11 +298,14 @@ public class TransactionController {
 			
 			String result = baseClient.deleteFile(idAttachments);
 			transactionService.deleteAttachment(id, idAttachments);
-			status.setStatus(result);
+			status.setMessage(result);
+			status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 			
 		} catch (Exception e) {
-
-			status.setStatus(CommonConstants.DELETE_ATTACHMENTS_FAILURE + e.getMessage());
+			
+			status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_DELETION_FAILURE);
+			status.setMessage(CommonConstants.DELETE_ATTACHMENTS_FAILURE + e.getMessage());
+			logger.error("Error while deleting a receipt");
 		}
 		
 		logger.info("Delete Transaction Receipt with id : " + id + "- End");

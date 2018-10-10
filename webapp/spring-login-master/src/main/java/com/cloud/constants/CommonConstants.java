@@ -18,7 +18,7 @@ public class CommonConstants {
 	public static String TRANSACTION_UPDATED = "Transaction has been modified successfully";
 	
 	/* Transaction failure */
-	public static String TRANSACTION_FAILURE = "Transaction creation failed";
+	public static String TRANSACTION_FAILURE = "Transaction creation/updation failed";
 	
 	/* Invalid Date format */
 	public static String INVALID_DATE_FORMAT = "Invalid date format. Please enter the date in the format : MM/DD/YYYY";
@@ -46,4 +46,45 @@ public class CommonConstants {
 	
 	/* Attachment deleted successfully */
 	public static String DELETE_ATTACHMENTS_SUCCESS = "Deleted Successfully";
+	
+	public static interface StatusCodes
+	{
+		public static String SUCCESS = "200";
+		
+		public static String FAILURE = "500";
+		
+		//User Failures
+		
+		public static String USER_REGISTRATION_FAILURE = "601";
+		
+		public static String UNAUTHORIZED = "602";
+		
+		//Transaction Failures
+		
+		public static String TRANSACTION_CREATION_FAILURE = "701";
+		
+		public static String TRANSACTION_UPDATION_FAILURE = "702";
+		
+		public static String TRANSACTION_DELETION_FAILURE = "703";
+		
+		public static String GET_ALL_TRANSACTIONS_FAILURE = "704";
+		
+		//Attachment Failure
+		
+		public static String GET_ATTACHMENT_FAILURE = "801";
+		
+		public static String UPLOAD_ATTACHMENT_FAILURE = "802";
+		
+		public static String ATTACHMENT_DELETION_FAILURE = "803";
+		
+		//Common Failure
+		
+		public static String INVALID_DATE_FORMAT = "901";
+		
+		public static String INVALID_EMAIL = "902";
+		
+		public static String INVALID_AMOUNT = "903";
+		
+		
+	}
 }
