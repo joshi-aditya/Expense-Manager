@@ -1,4 +1,4 @@
-﻿{
+{
    "Parameters":{
       "StackName":{
          "Description":"An stack name that will be prefixed to resource names",
@@ -48,7 +48,7 @@
          "Type":"AWS::EC2::SecurityGroup",
          "Properties":{
             "GroupName":"csye6225-webapp",
-            "GroupDescription":"Enable SSH access via port 22",
+            "GroupDescription":"Security Group for EC2 instance via port 22,80,443",
             "VpcId":{
                "Ref":"VpcId"
             },
@@ -85,9 +85,11 @@
             "SecurityGroupIngress":[
                {
                   "IpProtocol":"tcp",
-                  "CidrIp":"0.0.0.0/0",
-                  "FromPort":"3306",
-                  "ToPort":"3306"
+                  "FromPort":"3306",
+                  "ToPort":"3306",
+                  "SourceSecurityGroupId":{
+                     "Ref":"InstanceSecurityGroup"
+                  }
                }
             ]
          }
