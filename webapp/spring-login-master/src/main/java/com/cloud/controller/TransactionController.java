@@ -278,6 +278,61 @@ public class TransactionController {
 		
 		return status;
 	}
+	
+	/**
+	 * Added to update a receipt to a transaction
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.PUT)
+	public Status updateReceipt(@PathVariable String id, @RequestPart(value = "file") MultipartFile file) {
+
+		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
+		
+		Status status = new Status();
+		boolean receiptPresent = false;
+
+		try 
+		{
+			//Check if attachment is present
+			Transaction transaction = transactionService.find(id);
+			for(Attachment attachment : transaction.getAttachments())
+			{
+				if(attachment.getUri().endsWith(file.getOriginalFilename()))
+				{
+					receiptPresent = true;
+				}
+			}
+			
+			if(receiptPresent)
+			{
+				// Upload the receipt
+				String uri = baseClient.uploadFile(file);
+
+				// Save the metadata of the receipt in the database attachment table
+				transactionService.saveAttachment(id, uri);
+				status.setMessage(uri);
+				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+
+			}
+			else
+			{
+				logger.info("Receipt not present for the transaction");
+				status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
+				status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
+			}
+						
+		} catch (Exception e) {
+			
+			status.setStatusCode(CommonConstants.StatusCodes.UPLOAD_ATTACHMENT_FAILURE);
+			status.setMessage(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE + e.getMessage());
+			logger.error("Error while attaching the receipt");
+		}
+
+		logger.info("Attach Transaction Receipt with id : " + id + " - End");
+		
+		return status;
+	}
 
 	/**
 	 * Added to delete a receipt to a transaction

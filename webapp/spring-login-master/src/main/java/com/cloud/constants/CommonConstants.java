@@ -47,6 +47,9 @@ public class CommonConstants {
 	/* Attachment deleted successfully */
 	public static String DELETE_ATTACHMENTS_SUCCESS = "Deleted Successfully";
 	
+	/* Attachment not present */
+	public static String ATTACHMENTS_NOT_PRESENT = "Receipt not present for the transaction";
+	
 	public static interface StatusCodes
 	{
 		public static String SUCCESS = "200";
@@ -76,6 +79,8 @@ public class CommonConstants {
 		public static String UPLOAD_ATTACHMENT_FAILURE = "802";
 		
 		public static String ATTACHMENT_DELETION_FAILURE = "803";
+		
+		public static String ATTACHMENT_NOT_PRESENT = "804";
 		
 		//Common Failure
 		
