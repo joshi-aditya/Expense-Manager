@@ -11,6 +11,10 @@
       "SubnetId":{
          "Description":"A subnet id for EC2 instance",
          "Type":"String"
+      },
+      "BucketName":{
+          "Description":"A S3 bucket name",
+          "Type":"String"   
       }
    },
    "Resources":{
@@ -115,7 +119,15 @@
             },
             "TableName":"csye6225"
          }
-      }
+      },
+      "S3Bucket":{
+        "Type":"AWS::S3::Bucket",
+        "Properties":{
+            "BucketName":{
+                "Ref":"BucketName"
+            }
+        }
+    }
    },
    "Outputs":{
       "InstanceId":{
