@@ -7,11 +7,15 @@ subnet_id=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id}" "N
 
 echo $subnet_id
 
+domain_name=$(aws route53 list-hosted-zones --query 'HostedZones[0].Name' --output text)
+bucket_name=$domain_name"csye6225.com"
+echo $bucket_name
+
 echo "Creating stack.."
 
 STACK_ID=$(\aws cloudformation create-stack --stack-name ${STACK_NAME} \
 	--template-body file://csye6225-aws-cf-application.json\
-	--parameters ParameterKey=StackName,ParameterValue=${STACK_NAME} ParameterKey=VpcId,ParameterValue=${vpc_id} ParameterKey=SubnetId,ParameterValue=${subnet_id} \
+	--parameters ParameterKey=StackName,ParameterValue=${STACK_NAME} ParameterKey=VpcId,ParameterValue=${vpc_id} ParameterKey=SubnetId,ParameterValue=${subnet_id} ParameterKey=BucketName,ParameterValue=${bucket_name} \
    | jq -r .StackId \
 )
 	
@@ -19,4 +23,4 @@ STACK_ID=$(\aws cloudformation create-stack --stack-name ${STACK_NAME} \
 #Job Done!
 echo "Waiting on ${STACK_ID} create completion.."
 aws cloudformation wait stack-create-complete --stack-name ${STACK_ID}
-echo "EC2 Instances and security groups created!"
+echo "EC2 Instances, security groups, DynamoDB Table and S3 Bucket created!"
