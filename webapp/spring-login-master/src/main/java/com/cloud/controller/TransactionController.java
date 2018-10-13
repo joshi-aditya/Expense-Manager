@@ -284,8 +284,8 @@ public class TransactionController {
 	 * @param file
 	 * @return
 	 */
-	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.PUT)
-	public Status updateReceipt(@PathVariable String id, @RequestPart(value = "file") MultipartFile file) {
+	@RequestMapping(value = "/transaction/{id}/attachments/{attachmentId}", method = RequestMethod.PUT)
+	public Status updateReceipt(@PathVariable String id, @PathVariable String attachmentId, @RequestPart(value = "file") MultipartFile file) {
 
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 		
@@ -296,16 +296,21 @@ public class TransactionController {
 		{
 			//Check if attachment is present
 			Transaction transaction = transactionService.find(id);
+			String oldAttachmentUri = null;
 			for(Attachment attachment : transaction.getAttachments())
 			{
-				if(attachment.getUri().endsWith(file.getOriginalFilename()))
+				if(attachment.getId().toString().equals(attachmentId))
 				{
 					receiptPresent = true;
+					oldAttachmentUri = attachment.getUri();
+					break;
 				}
 			}
 			
 			if(receiptPresent)
 			{
+				//Delete the existing file
+				baseClient.deleteFile(oldAttachmentUri);
 				// Upload the receipt
 				String uri = baseClient.uploadFile(file);
 
