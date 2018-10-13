@@ -16,7 +16,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "user")
-public class User {
+public class User extends Status{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

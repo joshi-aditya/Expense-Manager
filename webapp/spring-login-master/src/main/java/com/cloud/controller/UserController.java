@@ -2,7 +2,15 @@ package com.cloud.controller;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +25,8 @@ import com.cloud.service.UserService;
 @RestController
 public class UserController {
 
+	private static final Logger logger = LogManager.getLogger(UserController.class);
+	
     @Autowired
     private UserService userService;
 
@@ -28,6 +38,7 @@ public class UserController {
     @ResponseBody
     public String time(){
     	
+    	logger.info("Get Time");
         return new Date().toString();
     }
 
@@ -39,19 +50,33 @@ public class UserController {
     @ResponseBody
     public String createNewUser(@RequestBody User user, BindingResult bindingResult) {
         
+    	logger.info("Create New User - Start");
+    	
         User userExists = userService.findUserByEmail(user.getEmail());
         if (userExists != null) {
            return CommonConstants.USER_ALREADY_EXISTS;
         }
        
         userService.saveUser(user);
+        
+        logger.info("Create New User - End");
+        
         return CommonConstants.USER_REGISTERATION_SUCCESS;
     }
     
     /**
-     * Added the function to get transaction for authenticated users
-     * @return String 
+     * Logout the user from Spring context
+     * @param request
+     * @param response
+     * @return
      */
+    @RequestMapping(value="/logout", method = RequestMethod.GET)
+	public void logoutPage (HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null){    
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+	}
     
 
 }
