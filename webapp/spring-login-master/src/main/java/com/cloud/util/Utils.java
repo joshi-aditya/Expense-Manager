@@ -1,6 +1,14 @@
 package com.cloud.util;
 
+import java.io.IOException;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicException;
+import net.sf.jmimemagic.MagicMatch;
+import net.sf.jmimemagic.MagicMatchNotFoundException;
+import net.sf.jmimemagic.MagicParseException;
 
 public class Utils {
 
@@ -27,4 +35,28 @@ public class Utils {
 	 public static String generateFileName(MultipartFile multiPart) {
 	        return multiPart.getOriginalFilename().replace(" ", "_");
 	    }
+	 
+	 /**
+	  * Added to check the attachemnt extension
+	 * @throws IOException 
+	 * @throws MagicException 
+	 * @throws MagicMatchNotFoundException 
+	 * @throws MagicParseException 
+	  */
+	 public static boolean isValidExt(MultipartFile multipart) throws Exception
+	 {
+		 boolean isValid = true;
+		 
+		 byte[] data = multipart.getBytes();
+		 MagicMatch match = Magic.getMagicMatch(data);
+		 String mimeType = match.getMimeType();
+		 
+		 if(!(mimeType.contains("png") || mimeType.contains("jpeg") 
+				 || mimeType.contains("jpg")))
+		 {
+			 isValid = false;
+		 }
+				 
+		 return isValid; 
+	 }
 }

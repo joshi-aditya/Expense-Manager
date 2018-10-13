@@ -78,6 +78,17 @@ public class TransactionService {
 	}
 	
 	/**
+	 * Save the attachment for a transaction
+	 * 
+	 * @param transaction
+	 * @throws Exception
+	 */
+	public void save(Attachment attachment) throws Exception {
+
+		attachmentRepository.save(attachment);
+	}
+	
+	/**
 	 * Deletes the attachments attached to the transaction and updates the transaction receipts
 	 * @param transactionId
 	 * @param fileUrl

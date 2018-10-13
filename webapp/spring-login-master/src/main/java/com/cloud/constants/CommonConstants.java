@@ -41,6 +41,9 @@ public class CommonConstants {
 	/* Upload attachments failure */
 	public static String UPLOAD_ATTACHMENTS_FAILURE = "Upload attachment for transaction failed";
 	
+	/* Upload attachments failure */
+	public static String INVALID_ATTACHMENT = "Invalid attachment extension";
+	
 	/* Delete attachments failure */
 	public static String DELETE_ATTACHMENTS_FAILURE = "Delete attachment for transaction failed";
 	
@@ -81,6 +84,8 @@ public class CommonConstants {
 		public static String ATTACHMENT_DELETION_FAILURE = "803";
 		
 		public static String ATTACHMENT_NOT_PRESENT = "804";
+		
+		public static String INVALID_ATTACHMENT = "805";
 		
 		//Common Failure
 		
