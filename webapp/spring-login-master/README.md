@@ -50,6 +50,12 @@ Open Postman and run
     example: 09/25/2018
     category*	string
     example: food
+    attachments: [
+               {
+                   id: string($uuid),
+                   uri: s3 bucket path/local path 
+                }
+                 ]
 }
 ```
 #### Authentication Rules for Transactions
@@ -82,3 +88,14 @@ Open Postman and run
 ```
 
 - Transactions can be deleted by using ```http://localhost:8080/transaction/{id}``` API with DELETE action. The "id" in path parameter is the transaction ID of transaction to be deleted
+
+#### Sample Requests for Transactions with attachments
+- Transactions with attachment can be created by using ```http://localhost:8080/transaction/{id}/attachments``` API with POST action. 
+Set the form-data in sample request body with key: "file" and value: image path(s3 bucket/local path)
+
+- Transactions created by user can be viewed by using ```http://localhost:8080/transaction/{id}/attachments``` API with GET action. 
+
+- Transactions can be updated by using ```http://localhost:8080/transaction/{id}/attachments/{attachmentId}``` API with PUT action. The "id" in path parameter is the transaction ID of transaction and "attachmentId" is the attachment ID to be updated. Here's the sample request body:
+Set the form-data in sample request body with key: "file" and value: image path(s3 bucket/local path)
+
+- Transactions can be deleted by using ```http://localhost:8080/transaction/{id}/attachments/{attachmentId}``` API with DELETE action. The "id" in path parameter is the transaction ID of transaction and "attachmentId" is the attachment ID to be deleted
