@@ -259,17 +259,27 @@ public class TransactionController {
 
 		try 
 		{
-			// Upload the receipt
-			String uri = baseClient.uploadFile(file);
+			if(Utils.isValidExt(file))
+			{
+				// Upload the receipt
+				String uri = baseClient.uploadFile(file);
 
-			// Save the metadata of the receipt in the database attachment table
-			transactionService.saveAttachment(id, uri);
-			status.setMessage(uri);
-			status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
-			
+				// Save the metadata of the receipt in the database attachment table
+				transactionService.saveAttachment(id, uri);
+				status.setMessage(uri);
+				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+
+			}
+			else
+			{
+				status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
+				status.setMessage(CommonConstants.INVALID_ATTACHMENT);
+				logger.error("Invlaid file extension");
+			}
+						
 		} catch (Exception e) {
 			
-			status.setStatusCode(CommonConstants.StatusCodes.UPLOAD_ATTACHMENT_FAILURE);
+			status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
 			status.setMessage(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE + e.getMessage());
 			logger.error("Error while attaching the receipt");
 		}
@@ -294,39 +304,40 @@ public class TransactionController {
 
 		try 
 		{
-			//Check if attachment is present
-			Transaction transaction = transactionService.find(id);
-			String oldAttachmentUri = null;
-			for(Attachment attachment : transaction.getAttachments())
-			{
-				if(attachment.getId().toString().equals(attachmentId))
-				{
-					receiptPresent = true;
-					oldAttachmentUri = attachment.getUri();
-					break;
+			if (Utils.isValidExt(file)) {
+				// Check if attachment is present
+				Transaction transaction = transactionService.find(id);
+				Attachment oldAttachment = null;
+				for (Attachment attachment : transaction.getAttachments()) {
+					if (attachment.getId().toString().equals(attachmentId)) {
+						receiptPresent = true;
+						oldAttachment = attachment;
+						break;
+					}
 				}
-			}
-			
-			if(receiptPresent)
-			{
-				//Delete the existing file
-				baseClient.deleteFile(oldAttachmentUri);
-				// Upload the receipt
-				String uri = baseClient.uploadFile(file);
 
-				// Save the metadata of the receipt in the database attachment table
-				transactionService.saveAttachment(id, uri);
-				status.setMessage(uri);
-				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+				if (receiptPresent) {
+					// Delete the existing file
+					baseClient.deleteFile(oldAttachment.getUri());
+					// Upload the receipt
+					String uri = baseClient.uploadFile(file);
+					oldAttachment.setUri(uri);
+					// Save the metadata of the receipt in the database attachment table
+					transactionService.save(oldAttachment);
+					status.setMessage(uri);
+					status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 
+				} else {
+					logger.info("Receipt not present for the transaction");
+					status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
+					status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
+				}
+			} else {
+				status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
+				status.setMessage(CommonConstants.INVALID_ATTACHMENT);
+				logger.error("Invlaid file extension");
 			}
-			else
-			{
-				logger.info("Receipt not present for the transaction");
-				status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
-				status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
-			}
-						
+
 		} catch (Exception e) {
 			
 			status.setStatusCode(CommonConstants.StatusCodes.UPLOAD_ATTACHMENT_FAILURE);
@@ -345,21 +356,40 @@ public class TransactionController {
 	 * @return
 	 * @throws IOException 
 	 */
-	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.DELETE)
-	public Status deleteAttachment(@PathVariable String id, @RequestPart(value = "url") String idAttachments,
+	@RequestMapping(value = "/transaction/{id}/attachments/{attachmentId}", method = RequestMethod.DELETE)
+	public Status deleteAttachment(@PathVariable String id, @PathVariable String attachmentId,
 			HttpServletResponse response) throws IOException {
 
 		logger.info("Delete Transaction Receipt with id : " + id + "- Start");
 		
 		Status status = new Status();
+		boolean receiptPresent = false;
 
 		// Save the metadata of the receipt in the database attachment table
 		try {
 			
-			String result = baseClient.deleteFile(idAttachments);
-			transactionService.deleteAttachment(id, idAttachments);
-			status.setMessage(result);
-			status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+			Transaction transaction = transactionService.find(id);
+			Attachment oldAttachment = null;
+			for(Attachment attachment : transaction.getAttachments())
+			{
+				if(attachment.getId().toString().equals(attachmentId))
+				{
+					receiptPresent = true;
+					oldAttachment = attachment;
+					break;
+				}
+			}
+			
+			if (receiptPresent) {
+				String result = baseClient.deleteFile(oldAttachment.getUri());
+				transactionService.deleteAttachment(id, oldAttachment.getUri());
+				status.setMessage(result);
+				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+			} else {
+				logger.info("Receipt not present for the transaction");
+				status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
+				status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
+			}
 			
 		} catch (Exception e) {
 			

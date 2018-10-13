@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.auth.InstanceProfileCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -30,15 +30,11 @@ public class AmazonClient implements BaseClient{
 	private String endpointUrl;
 	@Value("${amazonProperties.bucketName}")
 	private String bucketName;
-	@Value("${amazonProperties.accessKey}")
-	private String accessKey;
-	@Value("${amazonProperties.secretKey}")
-	private String secretKey;
+	
 
 	@PostConstruct
 	private void initializeAmazon() {
-		//BasicAWSCredentials creds = new BasicAWSCredentials(this.accessKey, this.secretKey); 
-		this.s3client = AmazonS3ClientBuilder.standard().withCredentials(new InstanceProfileCredentialsProvider(false)).build();
+		this.s3client = AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 	}
 	
 	@Override

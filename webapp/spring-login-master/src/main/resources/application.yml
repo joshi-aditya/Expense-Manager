@@ -1,4 +1,4 @@
 amazonProperties:
   endpointUrl: http://s3.amazonaws.com
-  bucketName: csye6225-fall2018-testbucket
+  bucketName: csye6225-fall2018-dcunham.me.csye6225.com
  
