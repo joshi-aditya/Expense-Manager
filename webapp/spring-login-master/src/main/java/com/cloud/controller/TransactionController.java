@@ -108,11 +108,11 @@ public class TransactionController {
 				SimpleDateFormat sf = new SimpleDateFormat(transaction.getDate().toString());
 				transaction.setDate(sf.format(new Date()));
 				transactionService.save(transaction);
-				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+				status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_SUCCESS);
 				status.setMessage(CommonConstants.SUCCESS);
 
 			} else {
-				logger.info("Unauthorized user");
+				logger.info("Invalid Date format");
 				status.setStatusCode(CommonConstants.StatusCodes.INVALID_DATE_FORMAT);
 				status.setMessage(CommonConstants.INVALID_DATE_FORMAT);
 			}
@@ -152,7 +152,7 @@ public class TransactionController {
 				// Update the transaction with the new values
 				actualTransaction = this.setTransactionData(transaction, actualTransaction);
 				transactionService.save(actualTransaction);
-				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+				status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_SUCCESS);
 				status.setMessage(CommonConstants.SUCCESS);
 			} else {
 				logger.info("Unauthorized user");
@@ -192,7 +192,7 @@ public class TransactionController {
 
 			if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
 				transactionService.deleteById(id);
-				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+				status.setStatusCode(CommonConstants.StatusCodes.DELETION_SUCCESS);
 				status.setMessage(CommonConstants.SUCCESS);
 			} else {
 				logger.info("Unauthorized user");
@@ -218,32 +218,40 @@ public class TransactionController {
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.GET)
-    public AttachmentWrapper getReceipt(@PathVariable String id, HttpServletResponse response) throws IOException {
-		
-		logger.info("Get Transaction Receipt with id : "+ id + "Start");
-		
+	public AttachmentWrapper getReceipt(@PathVariable String id, HttpServletResponse response) throws IOException {
+
+		logger.info("Get Transaction Receipt with id : " + id + "Start");
+
+		// Fetches the current user name who is logged in
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		AttachmentWrapper attachmentWrapper = new AttachmentWrapper();
 		List<Attachment> attachmentList = null;
-		
-		//Fetches all the attachments in the transaction
+
+		// Fetches all the attachments in the transaction
 		try {
-			
 			Transaction transaction = transactionService.find(id);
-			attachmentList = transaction.getAttachments();
-			attachmentWrapper.setAttachments(attachmentList);
-			attachmentWrapper.setMessage(CommonConstants.SUCCESS);
-			attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
-			
+			if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
+				attachmentList = transaction.getAttachments();
+				attachmentWrapper.setAttachments(attachmentList);
+				attachmentWrapper.setMessage(CommonConstants.SUCCESS);
+				attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+			} else {
+				logger.info("Unauthorized user");
+				attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
+				attachmentWrapper.setMessage(CommonConstants.UNAUTHORIZED);
+			}
+
 		} catch (Exception e) {
 			logger.error("Get transaction receipts failed");
 			attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.GET_ATTACHMENT_FAILURE);
 			attachmentWrapper.setMessage(CommonConstants.GET_ATTACHMENTS_FAILURE + ":" + e.getMessage());
 		}
-		
-		logger.info("Get Transaction Receipt with id : "+ id + "- End");
-		
+
+		logger.info("Get Transaction Receipt with id : " + id + "- End");
+
 		return attachmentWrapper;
-    }
+	}
 	
 	/**
 	 * Added to upload a receipt to a transaction
@@ -254,38 +262,44 @@ public class TransactionController {
 	public Status uploadReceipt(@PathVariable String id, @RequestPart(value = "file") MultipartFile file) {
 
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
-		
+
+		// Fetches the current user name who is logged in
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		Status status = new Status();
 
-		try 
-		{
-			if(Utils.isValidExt(file))
-			{
-				// Upload the receipt
-				String uri = baseClient.uploadFile(file);
+		try {
+			if (Utils.isValidExt(file)) {
+				Transaction transaction = transactionService.find(id);
+				if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
+					// Upload the receipt
+					String uri = baseClient.uploadFile(file);
 
-				// Save the metadata of the receipt in the database attachment table
-				transactionService.saveAttachment(id, uri);
-				status.setMessage(uri);
-				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+					// Save the metadata of the receipt in the database attachment table
+					transactionService.saveAttachment(id, uri);
+					status.setMessage(uri);
+					status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+				} else {
+					logger.info("Unauthorized user");
+					status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
+					status.setMessage(CommonConstants.UNAUTHORIZED);
+				}
 
-			}
-			else
-			{
+			} else {
 				status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
 				status.setMessage(CommonConstants.INVALID_ATTACHMENT);
 				logger.error("Invlaid file extension");
 			}
-						
+
 		} catch (Exception e) {
-			
+
 			status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
 			status.setMessage(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE + e.getMessage());
 			logger.error("Error while attaching the receipt");
 		}
 
 		logger.info("Attach Transaction Receipt with id : " + id + " - End");
-		
+
 		return status;
 	}
 	
@@ -295,42 +309,52 @@ public class TransactionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/transaction/{id}/attachments/{attachmentId}", method = RequestMethod.PUT)
-	public Status updateReceipt(@PathVariable String id, @PathVariable String attachmentId, @RequestPart(value = "file") MultipartFile file) {
+	public Status updateReceipt(@PathVariable String id, @PathVariable String attachmentId,
+			@RequestPart(value = "file") MultipartFile file) {
 
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
-		
+
+		// Fetches the current user name who is logged in
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		Status status = new Status();
 		boolean receiptPresent = false;
 
-		try 
-		{
+		try {
 			if (Utils.isValidExt(file)) {
 				// Check if attachment is present
 				Transaction transaction = transactionService.find(id);
-				Attachment oldAttachment = null;
-				for (Attachment attachment : transaction.getAttachments()) {
-					if (attachment.getId().toString().equals(attachmentId)) {
-						receiptPresent = true;
-						oldAttachment = attachment;
-						break;
+				if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
+
+					Attachment oldAttachment = null;
+					for (Attachment attachment : transaction.getAttachments()) {
+						if (attachment.getId().toString().equals(attachmentId)) {
+							receiptPresent = true;
+							oldAttachment = attachment;
+							break;
+						}
 					}
-				}
 
-				if (receiptPresent) {
-					// Delete the existing file
-					baseClient.deleteFile(oldAttachment.getUri());
-					// Upload the receipt
-					String uri = baseClient.uploadFile(file);
-					oldAttachment.setUri(uri);
-					// Save the metadata of the receipt in the database attachment table
-					transactionService.save(oldAttachment);
-					status.setMessage(uri);
-					status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+					if (receiptPresent) {
+						// Delete the existing file
+						baseClient.deleteFile(oldAttachment.getUri());
+						// Upload the receipt
+						String uri = baseClient.uploadFile(file);
+						oldAttachment.setUri(uri);
+						// Save the metadata of the receipt in the database attachment table
+						transactionService.save(oldAttachment);
+						status.setMessage(uri);
+						status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 
+					} else {
+						logger.info("Receipt not present for the transaction");
+						status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
+						status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
+					}
 				} else {
-					logger.info("Receipt not present for the transaction");
-					status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
-					status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
+					logger.info("Unauthorized user");
+					status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
+					status.setMessage(CommonConstants.UNAUTHORIZED);
 				}
 			} else {
 				status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
@@ -339,14 +363,14 @@ public class TransactionController {
 			}
 
 		} catch (Exception e) {
-			
+
 			status.setStatusCode(CommonConstants.StatusCodes.UPLOAD_ATTACHMENT_FAILURE);
 			status.setMessage(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE + e.getMessage());
 			logger.error("Error while attaching the receipt");
 		}
 
 		logger.info("Attach Transaction Receipt with id : " + id + " - End");
-		
+
 		return status;
 	}
 
@@ -361,45 +385,52 @@ public class TransactionController {
 			HttpServletResponse response) throws IOException {
 
 		logger.info("Delete Transaction Receipt with id : " + id + "- Start");
-		
+
+		// Fetches the current user name who is logged in
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		Status status = new Status();
 		boolean receiptPresent = false;
 
 		// Save the metadata of the receipt in the database attachment table
 		try {
-			
+
 			Transaction transaction = transactionService.find(id);
-			Attachment oldAttachment = null;
-			for(Attachment attachment : transaction.getAttachments())
-			{
-				if(attachment.getId().toString().equals(attachmentId))
-				{
-					receiptPresent = true;
-					oldAttachment = attachment;
-					break;
+			if (transaction.getUser().getEmail().equalsIgnoreCase(auth.getName())) {
+				Attachment oldAttachment = null;
+				for (Attachment attachment : transaction.getAttachments()) {
+					if (attachment.getId().toString().equals(attachmentId)) {
+						receiptPresent = true;
+						oldAttachment = attachment;
+						break;
+					}
 				}
-			}
-			
-			if (receiptPresent) {
-				String result = baseClient.deleteFile(oldAttachment.getUri());
-				transactionService.deleteAttachment(id, oldAttachment.getUri());
-				status.setMessage(result);
-				status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
+
+				if (receiptPresent) {
+					String result = baseClient.deleteFile(oldAttachment.getUri());
+					transactionService.deleteAttachment(id, oldAttachment.getUri());
+					status.setMessage(result);
+					status.setStatusCode(CommonConstants.StatusCodes.DELETION_SUCCESS);
+				} else {
+					logger.info("Receipt not present for the transaction");
+					status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
+					status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
+				}
 			} else {
-				logger.info("Receipt not present for the transaction");
-				status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
-				status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
+				logger.info("Unauthorized user");
+				status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
+				status.setMessage(CommonConstants.UNAUTHORIZED);
 			}
-			
+
 		} catch (Exception e) {
-			
+
 			status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_DELETION_FAILURE);
 			status.setMessage(CommonConstants.DELETE_ATTACHMENTS_FAILURE + e.getMessage());
 			logger.error("Error while deleting a receipt");
 		}
-		
+
 		logger.info("Delete Transaction Receipt with id : " + id + "- End");
-		
+
 		return status;
 
 	}
