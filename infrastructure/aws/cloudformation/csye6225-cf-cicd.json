@@ -1,0 +1,124 @@
+{
+   "AWSTemplateFormatVersion":"2010-09-09",
+   "Description":"CloudFormation Template for CSYE 6225 - Fall 2018 Travis Policies",
+   "Parameters":{
+      "TravisUploadToS3PolicyName":{
+         "Type":"String"
+      },
+      "CodeDeployEC2S3Name":{
+         "Type":"String"
+      },
+      "TravisCDPolicyName":{
+         "Type":"String"
+      },
+      "Resource1":{
+         "Type":"String"
+      },
+      "Resource2":{
+         "Type":"String"
+      },
+      "Resource3":{
+         "Type":"String"
+      },
+      "Resource4":{
+         "Type":"String"
+      },
+      "Resource5":{
+         "Type":"String"
+      },
+      "BucketName":{
+        "Description":"A S3 bucket name",
+        "Type":"String"
+      }
+   },
+   "Resources":{
+        "CodeDeployEC2S3": {
+            "Type": "AWS::IAM::ManagedPolicy",
+            "Properties": {            
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                            "Action": [
+                                "s3:Get*",
+                                "s3:List*"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "ManagedPolicyName": {
+                    "Ref": "CodeDeployEC2S3Name"
+                }
+            }
+        },
+      "TravisUploadToS3Policy":{
+         "Type":"AWS::IAM::ManagedPolicy",
+         "Properties":{
+            "PolicyDocument":{
+               "Version":"2012-10-17",
+               "Statement":[
+                  {
+                     "Effect":"Allow",
+                     "Action":[
+                         "s3:PutObject"
+                         ],                        
+                     "Resource":[
+                         "*"
+                     ]
+                  }
+               ]
+            },
+            "ManagedPolicyName":{
+               "Ref":"TravisUploadToS3PolicyName"
+            }
+         }
+      },
+      "TravisCodeDeployPolicy":{
+         "Type":"AWS::IAM::ManagedPolicy",
+         "Properties":{
+            "PolicyDocument":{
+               "Version":"2012-10-17",
+               "Statement":[
+                  {
+                     "Effect":"Allow",
+                     "Action":[
+                        "codedeploy:RegisterApplicationRevision",
+                        "codedeploy:GetApplicationRevision"
+                     ],
+                     "Resource": { "Ref":"Resource2"}
+                  },
+                  {
+                     "Effect":"Allow",
+                     "Action":[
+                        "codedeploy:CreateDeployment",
+                        "codedeploy:GetDeployment"
+                     ],
+                     "Resource":"*"
+                  },
+                  {
+                     "Effect":"Allow",
+                     "Action":"codedeploy:GetDeploymentConfig",
+                     "Resource":[
+                        { "Ref":"Resource3"},
+                        { "Ref":"Resource4"},
+                        { "Ref":"Resource5"}
+                     ]
+                  }
+               ]
+            },
+            "ManagedPolicyName":{
+               "Ref":"TravisCDPolicyName"
+            }
+         }
+      },
+      "S3Bucket":{
+        "Type":"AWS::S3::Bucket",
+        "Properties":{
+           "BucketName":{
+              "Ref":"BucketName"
+           }
+        }
+     }
+   }
+}
