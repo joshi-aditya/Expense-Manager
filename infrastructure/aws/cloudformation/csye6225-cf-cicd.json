@@ -29,6 +29,18 @@
       "BucketName":{
         "Description":"A S3 bucket name",
         "Type":"String"
+      },
+      "CodeDeployEC2ServiceRoleService":{
+        "Type":"String" 
+      },
+      "CodeDeployServiceRoleService":{
+        "Type":"String" 
+      },
+      "CodeDeployEC2ServiceRoleName":{
+        "Type":"String" 
+      },
+      "CodeDeployServiceRoleName":{
+        "Type":"String" 
       }
    },
    "Resources":{
@@ -119,6 +131,81 @@
               "Ref":"BucketName"
            }
         }
-     }
+     },
+     "CodeDeployEC2ServiceRole": {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+            "RoleName": {
+                "Ref": "CodeDeployEC2ServiceRoleName"
+            },
+            "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [{
+                                    "Ref": "CodeDeployEC2ServiceRoleService"
+                                }
+                            ]
+                        },
+                        "Action": [
+                            "sts:AssumeRole"
+                        ]
+                    }
+                ]
+            },
+            "ManagedPolicyArns": [{
+                    "Ref": "CodeDeployEC2S3"
+                },
+                "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+            ]
+        }
+    },
+    "CodeDeployServiceRole": {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+            "RoleName": {
+                "Ref": "CodeDeployServiceRoleName"
+            },
+            "ManagedPolicyArns": [
+                "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+            ],
+            "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [{
+                        "Sid": "",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [{
+                                    "Ref": "CodeDeployServiceRoleService"
+                                }
+                            ]
+                        },
+                        "Action": "sts:AssumeRole"
+                    }
+                ]
+            }
+        }
+    },
+    "CodeDeployEC2ServiceRoleInstanceProfile": {
+        "Type": "AWS::IAM::InstanceProfile",
+        "Properties": {
+            "Path": "/",
+            "Roles": [{
+                    "Ref": "CodeDeployEC2ServiceRole"
+                }
+            ]
+        }
+    },
+    "CodeDeployServiceRoleInstanceProfile": {
+        "Type": "AWS::IAM::InstanceProfile",
+        "Properties": {
+            "Path": "/",
+            "Roles": [{
+                    "Ref": "CodeDeployServiceRole"
+                }
+            ]
+        }
+    }   
    }
 }
