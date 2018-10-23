@@ -10,7 +10,7 @@ import com.cloud.repository.UserRepository;
 
 public class UserServiceTest {
 
-    @Mock
+    /*@Mock
     private UserRepository mockUserRepository;
     @Mock
     private BCryptPasswordEncoder mockBCryptPasswordEncoder;
@@ -32,7 +32,7 @@ public class UserServiceTest {
 	@Test
     public void testFindUserByEmail() {
        //To be implemented
-    }
+    }*/
 
     
 }
