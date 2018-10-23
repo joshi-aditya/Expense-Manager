@@ -81,6 +81,9 @@
                   }
                ]
             },
+            "Users" : [
+                "travis-ci"
+            ],
             "ManagedPolicyName":{
                "Ref":"TravisUploadToS3PolicyName"
             }
@@ -119,6 +122,9 @@
                   }
                ]
             },
+            "Users" : [           
+                    "travis-ci"              
+            ],
             "ManagedPolicyName":{
                "Ref":"TravisCDPolicyName"
             }
