@@ -65,7 +65,7 @@
                                 "sudo yum install ruby ntp wget java-1.8.0-openjdk-devel -y",
                                 "sudo systemctl start ntpd",
                                 "sudo systemctl enable ntpd",
-                                "sudo cd /home/ec2-user",
+                                "sudo cd /home/centos",
                                 "sudo wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install",
                                 "sudo chmod +x ./install",
                                 "sudo ./install auto",
