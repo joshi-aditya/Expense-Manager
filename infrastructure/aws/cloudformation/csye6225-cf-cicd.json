@@ -3,9 +3,6 @@
       "TravisUploadToS3PolicyName":{
          "Type":"String"
       },
-      "CodeDeployEC2S3Name":{
-         "Type":"String"
-      },
       "TravisCDPolicyName":{
          "Type":"String"
       },
@@ -28,13 +25,7 @@
          "Description":"A S3 bucket name",
          "Type":"String"
       },
-      "CodeDeployEC2ServiceRoleService":{
-         "Type":"String"
-      },
       "CodeDeployServiceRoleService":{
-         "Type":"String"
-      },
-      "CodeDeployEC2ServiceRoleName":{
          "Type":"String"
       },
       "CodeDeployServiceRoleName":{
@@ -45,27 +36,6 @@
       }
    },
    "Resources":{
-      "CodeDeployEC2S3":{
-         "Type":"AWS::IAM::ManagedPolicy",
-         "Properties":{
-            "PolicyDocument":{
-               "Version":"2012-10-17",
-               "Statement":[
-                  {
-                     "Action":[
-                        "s3:Get*",
-                        "s3:List*"
-                     ],
-                     "Effect":"Allow",
-                     "Resource":"*"
-                  }
-               ]
-            },
-            "ManagedPolicyName":{
-               "Ref":"CodeDeployEC2S3Name"
-            }
-         }
-      },
       "TravisUploadToS3Policy":{
          "Type":"AWS::IAM::ManagedPolicy",
          "Properties":{
@@ -148,38 +118,6 @@
             }
          }
       },
-      "CodeDeployEC2ServiceRole":{
-         "Type":"AWS::IAM::Role",
-         "Properties":{
-            "RoleName":{
-               "Ref":"CodeDeployEC2ServiceRoleName"
-            },
-            "AssumeRolePolicyDocument":{
-               "Version":"2012-10-17",
-               "Statement":[
-                  {
-                     "Effect":"Allow",
-                     "Principal":{
-                        "Service":[
-                           {
-                              "Ref":"CodeDeployEC2ServiceRoleService"
-                           }
-                        ]
-                     },
-                     "Action":[
-                        "sts:AssumeRole"
-                     ]
-                  }
-               ]
-            },
-            "ManagedPolicyArns":[
-               {
-                  "Ref":"CodeDeployEC2S3"
-               },
-               "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-            ]
-         }
-      },
       "CodeDeployServiceRole":{
          "Type":"AWS::IAM::Role",
          "Properties":{
@@ -207,18 +145,7 @@
                ]
             }
          }
-      },
-      "CodeDeployEC2ServiceRoleInstanceProfile":{
-         "Type":"AWS::IAM::InstanceProfile",
-         "Properties":{
-            "Path":"/",
-            "Roles":[
-               {
-                  "Ref":"CodeDeployEC2ServiceRole"
-               }
-            ]
-         }
-      },
+      },     
       "CodeDeployServiceRoleInstanceProfile":{
          "Type":"AWS::IAM::InstanceProfile",
          "Properties":{

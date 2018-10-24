@@ -13,12 +13,18 @@ domain_name=$(aws route53 list-hosted-zones --query 'HostedZones[0].Name' --outp
 bucket_name=${domain_name}"csye6225.com"
 echo $bucket_name
 
+export CODE_DEPLOY_EC2_SERVICE_ROLE=CodeDeployEC2ServiceRole
+export CODE_DEPLOY_EC2_SERVICEROLE_SERVICE=ec2.amazonaws.com
+export CODE_DEPLOY_EC2_S3_NAME=CodeDeploy-EC2-S3
+
 echo "Creating stack.."
 
 STACK_ID=$(\aws cloudformation create-stack --stack-name ${STACK_NAME} \
 	--template-body file://csye6225-aws-cf-application.json\
-	--parameters ParameterKey=StackName,ParameterValue=${STACK_NAME} ParameterKey=VpcId,ParameterValue=${vpc_id} ParameterKey=SubnetId,ParameterValue=${subnet_id} ParameterKey=SubnetId2,ParameterValue=${subnet_id2} ParameterKey=BucketName,ParameterValue=${bucket_name} \
-   | jq -r .StackId \
+	--parameters ParameterKey=StackName,ParameterValue=${STACK_NAME} ParameterKey=VpcId,ParameterValue=${vpc_id} ParameterKey=SubnetId,ParameterValue=${subnet_id} ParameterKey=SubnetId2,ParameterValue=${subnet_id2} ParameterKey=BucketName,ParameterValue=${bucket_name} ParameterKey=CodeDeployEC2ServiceRoleService,ParameterValue=$CODE_DEPLOY_EC2_SERVICEROLE_SERVICE ParameterKey=CodeDeployEC2ServiceRoleName,ParameterValue=$CODE_DEPLOY_EC2_SERVICE_ROLE ParameterKey=CodeDeployEC2S3Name,ParameterValue=$CODE_DEPLOY_EC2_S3_NAME \
+	--capabilities CAPABILITY_IAM \
+	--capabilities CAPABILITY_NAMED_IAM \
+ 	| jq -r .StackId \
 )
 	
 	
