@@ -10,7 +10,7 @@ subnet_id2=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id}" "
 echo $subnet_id
 
 domain_name=$(aws route53 list-hosted-zones --query 'HostedZones[0].Name' --output text)
-bucket_name=$domain_name"csye6225.com"
+bucket_name=${domain_name}"csye6225.com"
 echo $bucket_name
 
 echo "Creating stack.."
@@ -25,4 +25,9 @@ STACK_ID=$(\aws cloudformation create-stack --stack-name ${STACK_NAME} \
 #Job Done!
 echo "Waiting on ${STACK_ID} create completion.."
 aws cloudformation wait stack-create-complete --stack-name ${STACK_ID}
-echo "EC2 Instances, security groups, DynamoDB Table and S3 Bucket created!"
+if [ $? -ne 0 ]; then
+	echo "Application Stack creation failed!"
+    exit 1
+else
+    echo "EC2 Instance, RDS, security groups, DynamoDB Table and S3 Bucket created!"
+fi

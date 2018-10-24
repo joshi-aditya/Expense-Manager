@@ -71,6 +71,23 @@
                                 "wget http://apache.mirrors.pair.com/tomcat/tomcat-8/v8.5.34/bin/apache-tomcat-8.5.34.tar.gz",
                                 "sudo mkdir /opt/tomcat",
                                 "sudo tar xvf apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1",
+                                "sudo touch /home/centos/setenv.sh",
+                                "cd /home/centos",
+                                {
+                                    "Fn::Join": [
+                                        "", [
+                                            "echo 'JAVA_OPTS= -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Dspring.datasource.username=csye6225master -Dspring.datasource.password=csye6225password -Dspring.profiles.active=dev -Dspring.datasource.url=jdbc:mysql://",
+                                            {
+                                                "Fn::GetAtt": [
+                                                    "MyDB",
+                                                    "Endpoint.Address"
+                                                ]
+                                            }, 
+                                            ":3306/csye6225' >> setenv.sh"
+                                        ]
+                                    ]
+                                },
+                                "sudo mv /home/centos/setenv.sh /opt/tomcat/bin",
                                 "cd /opt/tomcat",
                                 "sudo chgrp -R tomcat /opt/tomcat",
                                 "sudo chmod -R g+r conf",
@@ -87,7 +104,21 @@
                                 "echo 'Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid' >> tomcat.service",
                                 "echo 'Environment=CATALINA_HOME=/opt/tomcat' >> tomcat.service",
                                 "echo 'Environment=CATALINA_BASE=/opt/tomcat' >> tomcat.service",
-                                "echo 'Environment=\"JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Dspring.datasource.username=csye6225master -Dspring.datasource.password=csye6225password -Dspring.profiles.active=dev -Dspring.datasource.url=jdbc:mysql://${MyDB.Endpoint.Address}:3306/csye6225\"' >> tomcat.service",
+                                "echo 'Environment=\"CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC\"' >> tomcat.service",
+                                {
+                                    "Fn::Join": [
+                                        "", [
+                                            "echo 'Environment=\"JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Dspring.datasource.username=csye6225master -Dspring.datasource.password=csye6225password -Dspring.profiles.active=dev -Dspring.datasource.url=jdbc:mysql://",
+                                            {
+                                                "Fn::GetAtt": [
+                                                    "MyDB",
+                                                    "Endpoint.Address"
+                                                ]
+                                            }, 
+                                            ":3306/csye6225\"' >> tomcat.service"
+                                        ]
+                                    ]
+                                },
                                 "echo 'ExecStart=/opt/tomcat/bin/startup.sh' >> tomcat.service",
                                 "echo 'ExecStop=/bin/kill -15 $MAINPID' >> tomcat.service",
                                 "echo 'User=tomcat' >> tomcat.service",
