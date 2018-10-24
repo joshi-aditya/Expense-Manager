@@ -83,7 +83,11 @@
                                                     "Endpoint.Address"
                                                 ]
                                             }, 
-                                            ":3306/csye6225' >> setenv.sh"
+                                            ":3306/csye6225 -Dspring.bucket.name=", 
+                                            {
+                                                "Ref": "BucketName"
+                                            },
+                                            "\"' >> tomcat.service"
                                         ]
                                     ]
                                 },
@@ -115,7 +119,11 @@
                                                     "Endpoint.Address"
                                                 ]
                                             }, 
-                                            ":3306/csye6225\"' >> tomcat.service"
+                                            ":3306/csye6225 -Dspring.bucket.name=", 
+                                            {
+                                                "Ref": "BucketName"
+                                            },
+                                            "\"' >> tomcat.service"
                                         ]
                                     ]
                                 },
