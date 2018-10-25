@@ -3,6 +3,7 @@ package com.cloud.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.cloud.model.User;
@@ -11,28 +12,33 @@ import com.cloud.repository.UserRepository;
 public class UserServiceTest {
 
     @Mock
-    private UserRepository mockUserRepository;
-    @Mock
-    private BCryptPasswordEncoder mockBCryptPasswordEncoder;
+    UserService userService;
 
     @Mock
-    private UserService userServiceUnderTest;
-    private User user;
+    UserRepository userRepository;
+
+
+    @Mock
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Before
-    public void setUp() {
+    public void setup() {
+
+        MockitoAnnotations.initMocks(this);
+
 
     }
 
     @Test
-    public void testSaveUser() {
-       //To be implemented
+    public void save() {
+
+        User userAccount = new User();
+        userAccount.setEmail("meven.dcunha@gmail.com");
+        userAccount.setPassword("1234");
+        userService.saveUser(userAccount);
+
     }
 
-	@Test
-    public void testFindUserByEmail() {
-       //To be implemented
-    }
 
-    
 }
