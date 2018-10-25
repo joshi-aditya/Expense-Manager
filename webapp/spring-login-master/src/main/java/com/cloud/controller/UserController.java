@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cloud.constants.CommonConstants;
 import com.cloud.model.User;
+import com.cloud.service.AmazonClient;
 import com.cloud.service.UserService;
 
 @RestController
 public class UserController {
 
-	//private static final //logger //logger = LogManager.get//logger(UserController.class);
+	//private static final //logger = LogManager.get//logger(UserController.class);
 	
     @Autowired
     private UserService userService;
@@ -38,7 +39,8 @@ public class UserController {
     public String time(){
     	
     	//logger.info("Get Time");
-        return new Date().toString();
+    	//return new Date().toString();
+    	return new AmazonClient().test();
     }
 
     /**
