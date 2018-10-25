@@ -40,7 +40,9 @@
                      {
                         "Action":[
                            "s3:Get*",
-                           "s3:List*"
+                           "s3:List*",
+                           "s3:PutObject*",
+                           "s3:PutObjectAcl"
                         ],
                         "Effect":"Allow",
                         "Resource":"*"
@@ -179,6 +181,8 @@
                                 "sudo chmod -R g+r conf",
                                 "sudo chmod g+x conf",
                                 "sudo chown -R tomcat webapps/ work/ temp/ logs/",
+                                "sudo mkdir /opt/tomcat/uploads",
+                                "sudo chmod o+rwx /opt/tomcat/uploads/",
                                 "cd /home/centos",
                                 "sudo touch tomcat.service",
                                 "sudo echo '[Unit]' > tomcat.service",
