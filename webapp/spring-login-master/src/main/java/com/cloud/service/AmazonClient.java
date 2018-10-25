@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
+import org.amazonaws.auth.DefaultAWSCrentialsProviderChain;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -30,34 +30,25 @@ public class AmazonClient implements BaseClient{
 
 	@Value("${amazonProperties.endpointUrl}")
 	private String endpointUrl;
-	@Value("${spring.bucket.name}")
+	@Value("${amazonProperties.bucket.name}")
 	private String bucketName;
-	@Value("${accessKey}")
-	private String accessKey;
-	@Value("${secretKey}")
-	private String secretKey;
- 	
+	
+
 	@PostConstruct
 	private void initializeAmazon() {
-		BasicAWSCredentials creds = new BasicAWSCredentials(this.accessKey, this.secretKey);
-		this.s3client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(creds)).build();
-	}
-
-	
-	
-	public String test()
-	{
-		return "Access Key : " + accessKey;
+		this.s3client = AmazonS3ClientBuilder.standard()
+						.withCredentials(new DefaultAWSCrentialsProviderChain())
+						.build();
 	}
 	
 	@Override
 	public String uploadFile(MultipartFile multipartFile) throws Exception {
 		
 		String fileUrl = "";
-		File file = convertMultiPartToFile(multipartFile);
+	//	File file = convertMultiPartToFile(multipartFile);
 		String fileName = Utils.generateFileName(multipartFile);
 		fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
-		uploadFileTos3bucket(fileName, file);
+		uploadFileTos3bucket(fileName, multipartFile);
 		file.delete();
 
 		return fileUrl;
@@ -72,14 +63,17 @@ public class AmazonClient implements BaseClient{
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convFile);
+        FileOutputStream fos = new FileOutputStream("/opt/tomcat/uploads"+convFile);
         fos.write(file.getBytes());
         fos.close();
         return convFile;
     }
 
-    private void uploadFileTos3bucket(String fileName, File file) {
-        s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+
+    private void uploadFileTos3bucket(String fileName, MultipartFile multipartFile) {
+		ObjectMetadata metadata = new ObjectMetadata();
+		metadata.setContentLength(multipartFile.getSize());
+        s3client.putObject(new PutObjectRequest(bucketName, fileName, multipartFile.getInputStream(),metadata);
+              //  .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 }
