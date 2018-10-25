@@ -12,6 +12,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
@@ -30,6 +32,7 @@ public class Attachment{
 	
 	@ManyToOne
 	@JoinColumn(name="transaction_id", nullable=false)
+	@JsonIgnore
 	private Transaction transaction;
 
 	public Attachment()

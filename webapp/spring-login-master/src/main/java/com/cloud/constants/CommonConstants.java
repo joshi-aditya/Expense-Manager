@@ -63,9 +63,13 @@ public class CommonConstants {
 		
 		public static String USER_REGISTRATION_FAILURE = "601";
 		
-		public static String UNAUTHORIZED = "602";
+		public static String UNAUTHORIZED = "401";
+		
+		public static String DELETION_SUCCESS = "204";
 		
 		//Transaction Failures
+		
+		public static String TRANSACTION_SUCCESS = "201";
 		
 		public static String TRANSACTION_CREATION_FAILURE = "701";
 		
