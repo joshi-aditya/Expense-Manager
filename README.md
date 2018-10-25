@@ -9,5 +9,5 @@
 
 ### Prerequisites and installations
 
-Prerequisites for installations for each application process are mentioned in the respective folder structure
+Prerequisites for installations for each application process are mentioned in the respective folder structure 
 
