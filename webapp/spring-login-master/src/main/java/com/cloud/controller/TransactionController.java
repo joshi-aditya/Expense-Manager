@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,7 +34,7 @@ import com.cloud.util.Utils;
 @RestController
 public class TransactionController {
 
-	private static final Logger logger = LogManager.getLogger(TransactionController.class);
+	//private static final //logger //logger = LogManager.get//logger(TransactionController.class);
 	
 	@Autowired
 	private TransactionService transactionService;
@@ -59,7 +57,7 @@ public class TransactionController {
 	@ResponseBody
 	public TransactionWrapper findByUserId(HttpServletResponse response) throws IOException {
 		
-		logger.info("Find Transactions by User : Start");
+		//logger.info("Find Transactions by User : Start");
 		
 		TransactionWrapper transactions = new TransactionWrapper();
 		
@@ -72,12 +70,12 @@ public class TransactionController {
 			transactions.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 			transactions.setMessage(CommonConstants.SUCCESS);
 		} catch (Exception e) {
-			logger.error("Get all transactions for user failed");
+			//logger.error("Get all transactions for user failed");
 			transactions.setStatusCode(CommonConstants.StatusCodes.GET_ALL_TRANSACTIONS_FAILURE);
 			transactions.setMessage(CommonConstants.GET_ALL_TRANSACTION_FAILURE + ":" + e.getMessage());
 		}
 
-		logger.info("Find Transactions by User : End");
+		//logger.info("Find Transactions by User : End");
 		
 		return transactions;
 	}
@@ -92,7 +90,7 @@ public class TransactionController {
 	@ResponseBody
 	public Status create(@RequestBody Transaction transaction, HttpServletResponse response) throws IOException {
 
-		logger.info("Create Transaction - Start");
+		//logger.info("Create Transaction - Start");
 
 		Status status = new Status();
 
@@ -112,17 +110,17 @@ public class TransactionController {
 				status.setMessage(CommonConstants.SUCCESS);
 
 			} else {
-				logger.info("Invalid Date format");
+				//logger.info("Invalid Date format");
 				status.setStatusCode(CommonConstants.StatusCodes.INVALID_DATE_FORMAT);
 				status.setMessage(CommonConstants.INVALID_DATE_FORMAT);
 			}
 		} catch (Exception e) {
-			logger.error("Create transaction failed");
+			//logger.error("Create transaction failed");
 			status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_CREATION_FAILURE);
 			status.setMessage(CommonConstants.TRANSACTION_FAILURE + ":" + e.getMessage());
 		}
 
-		logger.info("Create Transaction - End");
+		//logger.info("Create Transaction - End");
 
 		return status;
 	}
@@ -138,7 +136,7 @@ public class TransactionController {
 	public Status update(@PathVariable String id, @RequestBody Transaction transaction, HttpServletResponse response)
 			throws IOException {
 		
-		logger.info("Update Transaction - Start");
+		//logger.info("Update Transaction - Start");
 		
 		Status status = new Status();
 		// Fetches the current user name who is logged in
@@ -155,17 +153,17 @@ public class TransactionController {
 				status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_SUCCESS);
 				status.setMessage(CommonConstants.SUCCESS);
 			} else {
-				logger.info("Unauthorized user");
+				//logger.info("Unauthorized user");
 				status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
 				status.setMessage(CommonConstants.UNAUTHORIZED);
 			}
 		} catch (Exception e) {
-			logger.error("Update transaction failed");
+			//logger.error("Update transaction failed");
 			status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_UPDATION_FAILURE);
 			status.setMessage(CommonConstants.TRANSACTION_FAILURE + " : " + e.getMessage());
 		}
 
-		logger.info("Update Transaction - End");
+		//logger.info("Update Transaction - End");
 		
 		return status;
 	}
@@ -181,7 +179,7 @@ public class TransactionController {
 	@ResponseBody
 	public Status delete(@PathVariable String id, HttpServletResponse response) throws IOException {
 		
-		logger.info("Delete Transaction - Start");
+		//logger.info("Delete Transaction - Start");
 		
 		Status status = new Status();
 		// Fetches the current user name who is logged in
@@ -195,17 +193,17 @@ public class TransactionController {
 				status.setStatusCode(CommonConstants.StatusCodes.DELETION_SUCCESS);
 				status.setMessage(CommonConstants.SUCCESS);
 			} else {
-				logger.info("Unauthorized user");
+				//logger.info("Unauthorized user");
 				status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
 				status.setMessage(CommonConstants.UNAUTHORIZED);
 			}
 		} catch (Exception e) {
-			logger.error("Delete transactions failed");
+			//logger.error("Delete transactions failed");
 			status.setStatusCode(CommonConstants.StatusCodes.TRANSACTION_DELETION_FAILURE);
 			status.setMessage(CommonConstants.TRANSACTION_DELETION_FAILURE + ":" + e.getMessage());
 		}
 
-		logger.info("Delete Transaction - End");
+		//logger.info("Delete Transaction - End");
 		
 		return status;
 
@@ -220,7 +218,7 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.GET)
 	public AttachmentWrapper getReceipt(@PathVariable String id, HttpServletResponse response) throws IOException {
 
-		logger.info("Get Transaction Receipt with id : " + id + "Start");
+		//logger.info("Get Transaction Receipt with id : " + id + "Start");
 
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -237,18 +235,18 @@ public class TransactionController {
 				attachmentWrapper.setMessage(CommonConstants.SUCCESS);
 				attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 			} else {
-				logger.info("Unauthorized user");
+				//logger.info("Unauthorized user");
 				attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
 				attachmentWrapper.setMessage(CommonConstants.UNAUTHORIZED);
 			}
 
 		} catch (Exception e) {
-			logger.error("Get transaction receipts failed");
+			//logger.error("Get transaction receipts failed");
 			attachmentWrapper.setStatusCode(CommonConstants.StatusCodes.GET_ATTACHMENT_FAILURE);
 			attachmentWrapper.setMessage(CommonConstants.GET_ATTACHMENTS_FAILURE + ":" + e.getMessage());
 		}
 
-		logger.info("Get Transaction Receipt with id : " + id + "- End");
+		//logger.info("Get Transaction Receipt with id : " + id + "- End");
 
 		return attachmentWrapper;
 	}
@@ -261,7 +259,7 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.POST)
 	public Status uploadReceipt(@PathVariable String id, @RequestPart(value = "file") MultipartFile file) {
 
-		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
+		//logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -280,7 +278,7 @@ public class TransactionController {
 					status.setMessage(uri);
 					status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 				} else {
-					logger.info("Unauthorized user");
+					//logger.info("Unauthorized user");
 					status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
 					status.setMessage(CommonConstants.UNAUTHORIZED);
 				}
@@ -288,17 +286,17 @@ public class TransactionController {
 			} else {
 				status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
 				status.setMessage(CommonConstants.INVALID_ATTACHMENT);
-				logger.error("Invlaid file extension");
+				//logger.error("Invlaid file extension");
 			}
 
 		} catch (Exception e) {
 
 			status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
 			status.setMessage(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE + e.getMessage());
-			logger.error("Error while attaching the receipt");
+			//logger.error("Error while attaching the receipt");
 		}
 
-		logger.info("Attach Transaction Receipt with id : " + id + " - End");
+		//logger.info("Attach Transaction Receipt with id : " + id + " - End");
 
 		return status;
 	}
@@ -312,7 +310,7 @@ public class TransactionController {
 	public Status updateReceipt(@PathVariable String id, @PathVariable String attachmentId,
 			@RequestPart(value = "file") MultipartFile file) {
 
-		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
+		//logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -347,29 +345,29 @@ public class TransactionController {
 						status.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 
 					} else {
-						logger.info("Receipt not present for the transaction");
+						//logger.info("Receipt not present for the transaction");
 						status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
 						status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
 					}
 				} else {
-					logger.info("Unauthorized user");
+					//logger.info("Unauthorized user");
 					status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
 					status.setMessage(CommonConstants.UNAUTHORIZED);
 				}
 			} else {
 				status.setStatusCode(CommonConstants.StatusCodes.INVALID_ATTACHMENT);
 				status.setMessage(CommonConstants.INVALID_ATTACHMENT);
-				logger.error("Invlaid file extension");
+				//logger.error("Invlaid file extension");
 			}
 
 		} catch (Exception e) {
 
 			status.setStatusCode(CommonConstants.StatusCodes.UPLOAD_ATTACHMENT_FAILURE);
 			status.setMessage(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE + e.getMessage());
-			logger.error("Error while attaching the receipt");
+			//logger.error("Error while attaching the receipt");
 		}
 
-		logger.info("Attach Transaction Receipt with id : " + id + " - End");
+		//logger.info("Attach Transaction Receipt with id : " + id + " - End");
 
 		return status;
 	}
@@ -384,7 +382,7 @@ public class TransactionController {
 	public Status deleteAttachment(@PathVariable String id, @PathVariable String attachmentId,
 			HttpServletResponse response) throws IOException {
 
-		logger.info("Delete Transaction Receipt with id : " + id + "- Start");
+		//logger.info("Delete Transaction Receipt with id : " + id + "- Start");
 
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -412,12 +410,12 @@ public class TransactionController {
 					status.setMessage(result);
 					status.setStatusCode(CommonConstants.StatusCodes.DELETION_SUCCESS);
 				} else {
-					logger.info("Receipt not present for the transaction");
+					//logger.info("Receipt not present for the transaction");
 					status.setMessage(CommonConstants.ATTACHMENTS_NOT_PRESENT);
 					status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_NOT_PRESENT);
 				}
 			} else {
-				logger.info("Unauthorized user");
+				//logger.info("Unauthorized user");
 				status.setStatusCode(CommonConstants.StatusCodes.UNAUTHORIZED);
 				status.setMessage(CommonConstants.UNAUTHORIZED);
 			}
@@ -426,10 +424,10 @@ public class TransactionController {
 
 			status.setStatusCode(CommonConstants.StatusCodes.ATTACHMENT_DELETION_FAILURE);
 			status.setMessage(CommonConstants.DELETE_ATTACHMENTS_FAILURE + e.getMessage());
-			logger.error("Error while deleting a receipt");
+			//logger.error("Error while deleting a receipt");
 		}
 
-		logger.info("Delete Transaction Receipt with id : " + id + "- End");
+		//logger.info("Delete Transaction Receipt with id : " + id + "- End");
 
 		return status;
 
@@ -443,7 +441,7 @@ public class TransactionController {
 	 */
 	private Transaction setTransactionData(Transaction transaction, Transaction actualTransaction) {
 
-		logger.info("Set Transaction Data - Start");
+		//logger.info("Set Transaction Data - Start");
 		
 		actualTransaction.setAmount(transaction.getAmount());
 		actualTransaction.setDate(transaction.getDate());
@@ -451,7 +449,7 @@ public class TransactionController {
 		actualTransaction.setDescription(transaction.getDescription());
 		actualTransaction.setMerchant(transaction.getMerchant());
 
-		logger.info("Set Transaction Data - End");
+		//logger.info("Set Transaction Data - End");
 		
 		return actualTransaction;
 	}

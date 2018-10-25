@@ -5,8 +5,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +24,7 @@ import com.cloud.service.UserService;
 @RestController
 public class UserController {
 
-	private static final Logger logger = LogManager.getLogger(UserController.class);
+	//private static final //logger //logger = LogManager.get//logger(UserController.class);
 	
     @Autowired
     private UserService userService;
@@ -38,7 +37,7 @@ public class UserController {
     @ResponseBody
     public String time(){
     	
-    	logger.info("Get Time");
+    	//logger.info("Get Time");
         return new Date().toString();
     }
 
@@ -50,7 +49,7 @@ public class UserController {
     @ResponseBody
     public String createNewUser(@RequestBody User user, BindingResult bindingResult) {
         
-    	logger.info("Create New User - Start");
+    	//logger.info("Create New User - Start");
     	
         User userExists = userService.findUserByEmail(user.getEmail());
         if (userExists != null) {
@@ -59,7 +58,7 @@ public class UserController {
        
         userService.saveUser(user);
         
-        logger.info("Create New User - End");
+        //logger.info("Create New User - End");
         
         return CommonConstants.USER_REGISTERATION_SUCCESS;
     }
