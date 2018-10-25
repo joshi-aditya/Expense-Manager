@@ -15,4 +15,9 @@ STACK_ID=$(\
 
 echo "Waiting on deletion.."
 aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}
-echo "Stack ${STACK_NAME} deleted successfully!"
+if [ $? -ne 0 ]; then
+	echo "Stack ${STACK_NAME} deletion failed!"
+    exit 1
+else
+    echo "Stack ${STACK_NAME} deleted successfully!"
+fi
