@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloud.constants.CommonConstants;
+import com.cloud.model.Status;
 import com.cloud.model.User;
 import com.cloud.service.UserService;
 
@@ -81,6 +82,32 @@ public class UserController {
 		}
 		
 		logger.info("Logout - End");
+	}
+    
+    
+    @RequestMapping(value="/reset", method = RequestMethod.POST)
+	public Status generateResetToken() {
+
+    	Status status = new Status();
+		logger.info("generateResetToken - Start ");
+		
+		try 
+		{
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			userService.sendMessage(auth.getName());
+			status.setStatusCode(CommonConstants.SUCCESS);
+			status.setMessage("Reset Password success");
+		}
+		catch (Exception e) 
+		{
+			logger.error("Exception in generating reset token : " + e.getMessage());
+		}
+
+		logger.info("generateResetToken - End ");
+
+		
+		return status;
+
 	}
     
 
