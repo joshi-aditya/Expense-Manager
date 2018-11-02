@@ -113,7 +113,7 @@ public class TransactionController {
 
 			} else {
 				logger.info("Invalid Date format");
-				status.setStatusCode(CommonConstants.StatusCodes.INVALID_DATE_FORMAT);
+        status.setStatusCode(CommonConstants.StatusCodes.INVALID_DATE_FORMAT);
 				status.setMessage(CommonConstants.INVALID_DATE_FORMAT);
 			}
 		} catch (Exception e) {
@@ -122,7 +122,7 @@ public class TransactionController {
 			status.setMessage(CommonConstants.TRANSACTION_FAILURE + ":" + e.getMessage());
 		}
 
-		logger.info("Create Transaction - End");
+	  logger.info("Create Transaction - End");
 
 		return status;
 	}
@@ -299,7 +299,6 @@ public class TransactionController {
 		}
 
 		logger.info("Attach Transaction Receipt with id : " + id + " - End");
-
 		return status;
 	}
 	
@@ -316,7 +315,7 @@ public class TransactionController {
 
 		// Fetches the current user name who is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
+    
 		Status status = new Status();
 		boolean receiptPresent = false;
 
@@ -368,9 +367,8 @@ public class TransactionController {
 			status.setMessage(CommonConstants.UPLOAD_ATTACHMENTS_FAILURE + e.getMessage());
 			logger.error("Error while attaching the receipt");
 		}
-
+    
 		logger.info("Attach Transaction Receipt with id : " + id + " - End");
-
 		return status;
 	}
 
@@ -430,7 +428,6 @@ public class TransactionController {
 		}
 
 		logger.info("Delete Transaction Receipt with id : " + id + "- End");
-
 		return status;
 
 	}

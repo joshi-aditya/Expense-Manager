@@ -21,19 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cloud.constants.CommonConstants;
 import com.cloud.model.Status;
 import com.cloud.model.User;
+import com.cloud.service.AmazonClient;
 import com.cloud.service.UserService;
 
 @RestController
 public class UserController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
     @Autowired
     private UserService userService;
 
     /**
      * Added the function to get time for authenticated users
-     * @return String 
+     * @return String
      */
     @RequestMapping(value={"/time"}, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
@@ -45,33 +46,33 @@ public class UserController {
 
     /**
      * Added the to register the users and also check is the user is already present
-     * @return String 
+     * @return String
      */
     @RequestMapping(value = "/user/register", method = RequestMethod.POST)
     @ResponseBody
     public String createNewUser(@RequestBody User user, BindingResult bindingResult) {
-        
-    	logger.info("Create New User - Start");
-    	
+
+        logger.info("Create New User - Start");
+
         User userExists = userService.findUserByEmail(user.getEmail());
         if (userExists != null) {
-           return CommonConstants.USER_ALREADY_EXISTS;
+            return CommonConstants.USER_ALREADY_EXISTS;
         }
-       
+
         userService.saveUser(user);
-        
+
         logger.info("Create New User - End");
-        
+
         return CommonConstants.USER_REGISTERATION_SUCCESS;
     }
-    
+
     /**
      * Logout the user from Spring context
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value="/logout", method = RequestMethod.GET)
+  @RequestMapping(value="/logout", method = RequestMethod.GET)
 	public void logout (HttpServletRequest request, HttpServletResponse response) {
     	
     	logger.info("Logout - Start");
@@ -85,10 +86,10 @@ public class UserController {
 	}
     
     
-    @RequestMapping(value="/reset", method = RequestMethod.POST)
+  @RequestMapping(value="/reset", method = RequestMethod.POST)
 	public Status generateResetToken() {
 
-    	Status status = new Status();
+    Status status = new Status();
 		logger.info("generateResetToken - Start ");
 		
 		try 
@@ -105,10 +106,9 @@ public class UserController {
 
 		logger.info("generateResetToken - End ");
 
-		
 		return status;
 
 	}
-    
 
 }
+
