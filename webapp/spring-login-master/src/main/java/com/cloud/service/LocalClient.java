@@ -17,15 +17,16 @@ import com.cloud.util.Utils;
 public class LocalClient implements BaseClient {
 
 	private String localPath = ".//";
-
+	
+	private static final String UNDERSCORE = "_";
+	
 	@Override
-	public String uploadFile(MultipartFile multipartFile) throws Exception {
-
+	public String uploadFile(MultipartFile multipartFile, String userId) throws Exception {
+		
 		byte[] bytes = multipartFile.getBytes();
-		Path path = Paths.get(localPath + Utils.generateFileName(multipartFile));
-		Files.write(path, bytes);
-
-		return path.toString();
+    Path path = Paths.get(localPath + userId + UNDERSCORE + Utils.generateFileName(multipartFile));
+    Files.write(path, bytes);
+    return path.toString();
 	}
 
 	@Override
