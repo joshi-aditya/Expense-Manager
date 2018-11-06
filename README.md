@@ -2,7 +2,7 @@
 
 ### Team-members
 
-* Neha Bhangale : bhangale.n@husky.neu.edu
+* Neha Bhangale : bhangale.n@husky.neu.edu 
 * Aditya Joshi  : joshi.adit@husky.neu.edu
 * Sneha Kawitkar  : kawitkar.s@husky.neu.edu
 * Meven Dcunha  : dcunha.m@husky.neu.edu
