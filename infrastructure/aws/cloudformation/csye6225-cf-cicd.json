@@ -33,9 +33,75 @@
       },
       "ApplicationName":{
          "Type":"String"
-      }
+      },
+      "CodeDeployEC2S3Name":{
+         "Type":"String"
+      },
+      "CodeDeployEC2ServiceRoleName":{
+          "Type":"String"
+       },
+       "CodeDeployEC2ServiceRoleService":{
+          "Type":"String"
+       }
    },
-   "Resources":{
+    "Resources":{
+        "CodeDeployEC2S3":{
+            "Type":"AWS::IAM::ManagedPolicy",
+            "Properties":{
+            "PolicyDocument":{
+                "Version":"2012-10-17",
+                "Statement":[
+                    {
+                        "Action":[
+                        "s3:Get*",
+                        "s3:List*",
+                        "s3:PutObject",
+                        "s3:GetObject",
+                        "s3:DeleteObject"
+                        ],
+                        "Effect":"Allow",
+                        "Resource":"*"
+                    }
+                ]
+            },
+            "ManagedPolicyName":{
+                "Ref":"CodeDeployEC2S3Name"
+            }
+            }
+        },
+        "CodeDeployEC2ServiceRole":{
+            "Type":"AWS::IAM::Role",
+            "Properties":{
+            "RoleName":{
+                "Ref":"CodeDeployEC2ServiceRoleName"
+            },
+            "AssumeRolePolicyDocument":{
+                "Version":"2012-10-17",
+                "Statement":[
+                    {
+                        "Effect":"Allow",
+                        "Principal":{
+                        "Service":[
+                            {
+                                "Ref":"CodeDeployEC2ServiceRoleService"
+                            }
+                        ]
+                        },
+                        "Action":[
+                        "sts:AssumeRole"
+                        ]
+                    }
+                ]
+            },
+            "ManagedPolicyArns":[
+                {
+                    "Ref":"CodeDeployEC2S3"
+                },
+                "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+            ]
+            }
+        },   
       "TravisUploadToS3Policy":{
          "Type":"AWS::IAM::ManagedPolicy",
          "Properties":{
