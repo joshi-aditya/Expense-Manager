@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNSAsync;
 import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
+import com.amazonaws.services.sns.model.CreateTopicResult;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sns.model.Topic;
@@ -41,10 +44,10 @@ public class UserService implements UserDetailsService{
     }
     
     @PostConstruct
-    public void initializeSNSClient() {
+	public void initializeSNSClient() {
 
-        this.amazonSNSClient = AmazonSNSAsyncClientBuilder.defaultClient();
-    }
+		this.amazonSNSClient = AmazonSNSAsyncClientBuilder.defaultClient();
+	}
 
 
     public User findUserByEmail(String email) {
@@ -76,7 +79,10 @@ public class UserService implements UserDetailsService{
 
     	logger.info("Sending Message - {} ", emailId);
 
-        String topicArn = getTopicArn("password_reset");
+    	Future<CreateTopicResult> reset_password = amazonSNSClient.createTopicAsync("password_reset");
+        String topicArn = reset_password.get().getTopicArn();
+    	
+        //String topicArn = getTopicArn("password_reset");
         PublishRequest publishRequest = new PublishRequest(topicArn, emailId);
         Future<PublishResult> publishResultFuture = amazonSNSClient.publishAsync(publishRequest);
         String messageId = publishResultFuture.get().getMessageId();

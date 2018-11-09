@@ -15,13 +15,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloud.constants.CommonConstants;
 import com.cloud.model.Status;
 import com.cloud.model.User;
-import com.cloud.service.AmazonClient;
 import com.cloud.service.UserService;
 
 @RestController
@@ -86,21 +86,21 @@ public class UserController {
 	}
     
     
-  @RequestMapping(value="/reset", method = RequestMethod.POST)
-	public Status generateResetToken() {
+
+    @RequestMapping(value="/reset", method = RequestMethod.GET)
+	public Status generateResetToken(@RequestParam("email") String email) {
 
     Status status = new Status();
 		logger.info("generateResetToken - Start ");
 		
 		try 
 		{
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			userService.sendMessage(auth.getName());
+			userService.sendMessage(email);
 			status.setStatusCode(CommonConstants.SUCCESS);
 			status.setMessage("Reset Password success");
 		}
 		catch (Exception e) 
-		{
+		{	
 			logger.error("Exception in generating reset token : " + e.getMessage());
 		}
 
