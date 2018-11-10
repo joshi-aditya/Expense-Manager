@@ -95,9 +95,14 @@ public class UserController {
 		
 		try 
 		{
-			userService.sendMessage(email);
+			User user = userService.findUserByEmail(email);
+			if(user != null)
+			{
+				userService.sendMessage(email);
+			}
 			status.setStatusCode(CommonConstants.SUCCESS);
-			status.setMessage("Reset Password success");
+			status.setMessage(CommonConstants.PASSWORD_RESET_EMAIL);
+			
 		}
 		catch (Exception e) 
 		{	

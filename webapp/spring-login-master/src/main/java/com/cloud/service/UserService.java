@@ -8,6 +8,10 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +25,6 @@ import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sns.model.Topic;
 import com.cloud.model.User;
 import com.cloud.repository.UserRepository;
-
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Service("userService")
 public class UserService implements UserDetailsService{
@@ -79,15 +78,12 @@ public class UserService implements UserDetailsService{
 
     	logger.info("Sending Message - {} ", emailId);
 
-    	Future<CreateTopicResult> reset_password = amazonSNSClient.createTopicAsync("password_reset");
-        String topicArn = reset_password.get().getTopicArn();
-    	
-        //String topicArn = getTopicArn("password_reset");
-        PublishRequest publishRequest = new PublishRequest(topicArn, emailId);
-        Future<PublishResult> publishResultFuture = amazonSNSClient.publishAsync(publishRequest);
-        String messageId = publishResultFuture.get().getMessageId();
-        
-        logger.info("Send Message {} with message Id {} ", emailId, messageId);
+    	String topicArn = getTopicArn("password_reset");
+      PublishRequest publishRequest = new PublishRequest(topicArn, emailId);
+      Future<PublishResult> publishResultFuture = amazonSNSClient.publishAsync(publishRequest);
+      String messageId = publishResultFuture.get().getMessageId();
+
+      logger.info("Send Message {} with message Id {} ", emailId, messageId);
 
     }
 

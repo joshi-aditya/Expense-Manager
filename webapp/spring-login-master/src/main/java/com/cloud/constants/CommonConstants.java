@@ -53,6 +53,9 @@ public class CommonConstants {
 	/* Attachment not present */
 	public static String ATTACHMENTS_NOT_PRESENT = "Receipt not present for the transaction";
 	
+	/* Password reset email sent successfully */
+	public static String PASSWORD_RESET_EMAIL = "Password reset email sent";
+	
 	public static interface StatusCodes
 	{
 		public static String SUCCESS = "200";
