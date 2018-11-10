@@ -48,10 +48,8 @@ public class AmazonClient implements BaseClient{
 	@Override
 	public String uploadFile(MultipartFile multipartFile, String userId) throws Exception {
 		
-		String[] split = multipartFile.getOriginalFilename().split("\\.");
-        String contentType = Arrays.asList(split).get(1);
-        String name = Utils.generateFileName(multipartFile);
-        String fileName =  DIRECTORY + userId + UNDERSCORE + name + DOT + contentType;
+		String name = Utils.generateFileName(multipartFile);
+        String fileName =  DIRECTORY + userId + UNDERSCORE + name;
 
         InputStream inputStream = null;
         try {

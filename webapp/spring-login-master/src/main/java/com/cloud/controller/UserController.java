@@ -107,6 +107,8 @@ public class UserController {
 		catch (Exception e) 
 		{	
 			logger.error("Exception in generating reset token : " + e.getMessage());
+			status.setStatusCode(CommonConstants.SEND_RESET_EMAIL_FAILURE);
+			status.setMessage(e.getMessage());
 		}
 
 		logger.info("generateResetToken - End ");
