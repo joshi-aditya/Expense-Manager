@@ -336,7 +336,35 @@
               "LogStreamName": "webapp"
             },
             "DependsOn": "CloudWatchLogGroup"
-          }
+        },
+        "PostUserMetricFilter": {
+            "Type": "AWS::Logs::MetricFilter",
+            "Properties": {
+                "LogGroupName": { "Ref": "CloudWatchLogGroup" },
+                "FilterPattern": "Create New User - Start",
+                "MetricTransformations": [
+                    {
+                       "MetricValue": "1",
+                       "MetricNamespace": "Webapp",
+                       "MetricName": "PostUser"
+                    }
+                ]
+            }
+        },
+        "GetTimeMetricFilter": {
+            "Type": "AWS::Logs::MetricFilter",
+            "Properties": {
+                "LogGroupName": { "Ref": "CloudWatchLogGroup" },
+                "FilterPattern": "Get Time",
+                "MetricTransformations": [
+                    {
+                       "MetricValue": "1",
+                       "MetricNamespace": "Webapp",
+                       "MetricName": "GetTime"
+                    }
+                ]
+            }
+        }    
     },
     "Outputs": {
         "InstanceId": {
