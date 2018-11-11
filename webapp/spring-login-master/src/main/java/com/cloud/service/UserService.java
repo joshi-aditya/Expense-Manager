@@ -15,11 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNSAsync;
 import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
-import com.amazonaws.services.sns.model.CreateTopicResult;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sns.model.Topic;
@@ -76,9 +73,9 @@ public class UserService implements UserDetailsService{
     
     public void sendMessage(String emailId) throws ExecutionException, InterruptedException {
 
-    	logger.info("Sending Message - {} ", emailId);
-
-    	String topicArn = getTopicArn("password_reset");
+      logger.info("Sending Message - {} ", emailId);
+    
+      String topicArn = getTopicArn("password_reset");
       PublishRequest publishRequest = new PublishRequest(topicArn, emailId);
       Future<PublishResult> publishResultFuture = amazonSNSClient.publishAsync(publishRequest);
       String messageId = publishResultFuture.get().getMessageId();

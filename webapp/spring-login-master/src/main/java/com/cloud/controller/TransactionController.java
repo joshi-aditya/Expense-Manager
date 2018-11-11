@@ -30,6 +30,8 @@ import com.cloud.service.BaseClient;
 import com.cloud.service.TransactionService;
 import com.cloud.service.UserService;
 import com.cloud.util.Utils;
+import com.timgroup.statsd.StatsDClient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +48,9 @@ public class TransactionController {
 	
 	@Autowired
 	private BaseClient baseClient;
+	
+	@Autowired
+    private StatsDClient statsDClient;
 
 
 	/**
@@ -59,6 +64,7 @@ public class TransactionController {
 	@ResponseBody
 	public TransactionWrapper findByUserId(HttpServletResponse response) throws IOException {
 		
+		statsDClient.incrementCounter("/transaction");
 		logger.info("Find Transactions by User : Start");
 		
 		TransactionWrapper transactions = new TransactionWrapper();
@@ -92,6 +98,7 @@ public class TransactionController {
 	@ResponseBody
 	public Status create(@RequestBody Transaction transaction, HttpServletResponse response) throws IOException {
 
+		statsDClient.incrementCounter("/transaction");
 		logger.info("Create Transaction - Start");
 
 		Status status = new Status();
@@ -138,6 +145,7 @@ public class TransactionController {
 	public Status update(@PathVariable String id, @RequestBody Transaction transaction, HttpServletResponse response)
 			throws IOException {
 		
+		statsDClient.incrementCounter("/transaction/{id}");
 		logger.info("Update Transaction - Start");
 		
 		Status status = new Status();
@@ -181,6 +189,7 @@ public class TransactionController {
 	@ResponseBody
 	public Status delete(@PathVariable String id, HttpServletResponse response) throws IOException {
 		
+		statsDClient.incrementCounter("/transaction/{id}");
 		logger.info("Delete Transaction - Start");
 		
 		Status status = new Status();
@@ -220,6 +229,7 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.GET)
 	public AttachmentWrapper getReceipt(@PathVariable String id, HttpServletResponse response) throws IOException {
 
+		statsDClient.incrementCounter("/transaction/{id}/attachments");
 		logger.info("Get Transaction Receipt with id : " + id + "Start");
 
 		// Fetches the current user name who is logged in
@@ -261,6 +271,7 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.POST)
 	public Status uploadReceipt(@PathVariable String id, @RequestPart(value = "file") MultipartFile file) {
 
+		statsDClient.incrementCounter("/transaction/{id}/attachments");
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 
 		// Fetches the current user name who is logged in
@@ -311,6 +322,7 @@ public class TransactionController {
 	public Status updateReceipt(@PathVariable String id, @PathVariable String attachmentId,
 			@RequestPart(value = "file") MultipartFile file) {
 
+		statsDClient.incrementCounter("/transaction/{id}/attachments/{attachmentId}");
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 
 		// Fetches the current user name who is logged in
@@ -382,6 +394,7 @@ public class TransactionController {
 	public Status deleteAttachment(@PathVariable String id, @PathVariable String attachmentId,
 			HttpServletResponse response) throws IOException {
 
+		statsDClient.incrementCounter("/transaction/{id}/attachments/{attachmentId}");
 		logger.info("Delete Transaction Receipt with id : " + id + "- Start");
 
 		// Fetches the current user name who is logged in

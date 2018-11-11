@@ -23,6 +23,7 @@ import com.cloud.constants.CommonConstants;
 import com.cloud.model.Status;
 import com.cloud.model.User;
 import com.cloud.service.UserService;
+import com.timgroup.statsd.StatsDClient;
 
 @RestController
 public class UserController {
@@ -31,6 +32,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private StatsDClient statsDClient;
 
     /**
      * Added the function to get time for authenticated users
@@ -39,7 +43,8 @@ public class UserController {
     @RequestMapping(value={"/time"}, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String time(){
-    	
+    	    	
+    	statsDClient.incrementCounter("/time");
     	logger.info("Get Time");
     	return new Date().toString();
     }
@@ -52,6 +57,7 @@ public class UserController {
     @ResponseBody
     public String createNewUser(@RequestBody User user, BindingResult bindingResult) {
 
+    	statsDClient.incrementCounter("/user/register");
         logger.info("Create New User - Start");
 
         User userExists = userService.findUserByEmail(user.getEmail());
@@ -75,6 +81,7 @@ public class UserController {
   @RequestMapping(value="/logout", method = RequestMethod.GET)
 	public void logout (HttpServletRequest request, HttpServletResponse response) {
     	
+	  	statsDClient.incrementCounter("/logout");
     	logger.info("Logout - Start");
     	
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -90,7 +97,8 @@ public class UserController {
     @RequestMapping(value="/reset", method = RequestMethod.GET)
 	public Status generateResetToken(@RequestParam("email") String email) {
 
-    Status status = new Status();
+    	statsDClient.incrementCounter("/reset");
+    	Status status = new Status();
 		logger.info("generateResetToken - Start ");
 		
 		try 
