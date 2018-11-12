@@ -65,6 +65,7 @@ public class TransactionController {
 	public TransactionWrapper findByUserId(HttpServletResponse response) throws IOException {
 		
 		statsDClient.incrementCounter("/transaction");
+		logger.info("/transaction, methods=[GET], Get Transaction");
 		logger.info("Find Transactions by User : Start");
 		
 		TransactionWrapper transactions = new TransactionWrapper();
@@ -99,6 +100,7 @@ public class TransactionController {
 	public Status create(@RequestBody Transaction transaction, HttpServletResponse response) throws IOException {
 
 		statsDClient.incrementCounter("/transaction");
+		logger.info("/transaction, methods=[POST], Create Transaction");
 		logger.info("Create Transaction - Start");
 
 		Status status = new Status();
@@ -120,7 +122,7 @@ public class TransactionController {
 
 			} else {
 				logger.info("Invalid Date format");
-        status.setStatusCode(CommonConstants.StatusCodes.INVALID_DATE_FORMAT);
+				status.setStatusCode(CommonConstants.StatusCodes.INVALID_DATE_FORMAT);
 				status.setMessage(CommonConstants.INVALID_DATE_FORMAT);
 			}
 		} catch (Exception e) {
@@ -146,6 +148,7 @@ public class TransactionController {
 			throws IOException {
 		
 		statsDClient.incrementCounter("/transaction/{id}");
+		logger.info("/transaction/{id}, methods=[PUT], Update Transaction");
 		logger.info("Update Transaction - Start");
 		
 		Status status = new Status();
@@ -190,6 +193,7 @@ public class TransactionController {
 	public Status delete(@PathVariable String id, HttpServletResponse response) throws IOException {
 		
 		statsDClient.incrementCounter("/transaction/{id}");
+		logger.info("/transaction/{id}, methods=[DELETE], Delete Transaction");
 		logger.info("Delete Transaction - Start");
 		
 		Status status = new Status();
@@ -230,6 +234,7 @@ public class TransactionController {
 	public AttachmentWrapper getReceipt(@PathVariable String id, HttpServletResponse response) throws IOException {
 
 		statsDClient.incrementCounter("/transaction/{id}/attachments");
+		logger.info("/transaction/{id}/attachments, methods=[GET], Get Receipt");
 		logger.info("Get Transaction Receipt with id : " + id + "Start");
 
 		// Fetches the current user name who is logged in
@@ -272,6 +277,7 @@ public class TransactionController {
 	public Status uploadReceipt(@PathVariable String id, @RequestPart(value = "file") MultipartFile file) {
 
 		statsDClient.incrementCounter("/transaction/{id}/attachments");
+		logger.info("/transaction/{id}/attachments, methods=[POST], Upload Receipt");
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 
 		// Fetches the current user name who is logged in
@@ -323,6 +329,7 @@ public class TransactionController {
 			@RequestPart(value = "file") MultipartFile file) {
 
 		statsDClient.incrementCounter("/transaction/{id}/attachments/{attachmentId}");
+		logger.info("/transaction/{id}/attachments/{attachmentId}, methods=[PUT], Update Receipt");
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 
 		// Fetches the current user name who is logged in
@@ -395,6 +402,7 @@ public class TransactionController {
 			HttpServletResponse response) throws IOException {
 
 		statsDClient.incrementCounter("/transaction/{id}/attachments/{attachmentId}");
+		logger.info("/transaction/{id}/attachments/{attachmentId}, methods=[DELETE], Delete Receipt");
 		logger.info("Delete Transaction Receipt with id : " + id + "- Start");
 
 		// Fetches the current user name who is logged in

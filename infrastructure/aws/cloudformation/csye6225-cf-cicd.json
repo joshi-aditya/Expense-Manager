@@ -42,6 +42,9 @@
        },
        "CodeDeployEC2ServiceRoleService":{
           "Type":"String"
+       },
+       "Resourse6":{
+           "Type":"String"
        }
    },
     "Resources":{
@@ -211,6 +214,33 @@
                ]
             }
          }
+      },
+      "EC2SNSPolicy": {
+        "Type": "AWS::IAM::ManagedPolicy",
+        "Properties": {
+          "ManagedPolicyName": "Publish-EC2-SNS",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "sns:Publish",
+                  "sns:ListTopics"
+                ],
+                "Resource": [
+                    {"Ref": "Resourse6"},
+                    "*"
+                ]
+              }
+            ]
+          },
+          "Roles": [
+            {
+              "Ref": "CodeDeployEC2ServiceRole"
+            }
+          ]
+        }
       },     
       "CodeDeployServiceRoleInstanceProfile":{
          "Type":"AWS::IAM::InstanceProfile",

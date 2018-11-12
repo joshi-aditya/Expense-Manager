@@ -45,6 +45,7 @@ public class UserController {
     public String time(){
     	    	
     	statsDClient.incrementCounter("/time");
+    	logger.info("/time, methods=[GET], Get Time");
     	logger.info("Get Time");
     	return new Date().toString();
     }
@@ -58,6 +59,7 @@ public class UserController {
     public String createNewUser(@RequestBody User user, BindingResult bindingResult) {
 
     	statsDClient.incrementCounter("/user/register");
+    	logger.info("/user/register, methods=[POST], Register User");
         logger.info("Create New User - Start");
 
         User userExists = userService.findUserByEmail(user.getEmail());
@@ -82,6 +84,7 @@ public class UserController {
 	public void logout (HttpServletRequest request, HttpServletResponse response) {
     	
 	  	statsDClient.incrementCounter("/logout");
+	  	logger.info("/logout, methods=[GET], Logout");
     	logger.info("Logout - Start");
     	
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -98,6 +101,7 @@ public class UserController {
 	public Status generateResetToken(@RequestParam("email") String email) {
 
     	statsDClient.incrementCounter("/reset");
+    	logger.info("/reset, methods=[GET], Reset Password");
     	Status status = new Status();
 		logger.info("generateResetToken - Start ");
 		

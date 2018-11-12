@@ -16,12 +16,13 @@ export resourse2="arn:aws:codedeploy:"$region":"$account_id":application:"$appli
 export resourse3="arn:aws:codedeploy:"$region":"$account_id":deploymentconfig:CodeDeployDefault.OneAtATime"
 export resourse4="arn:aws:codedeploy:"$region":"$account_id":deploymentconfig:CodeDeployDefault.HalfAtATime"
 export resourse5="arn:aws:codedeploy:"$region":"$account_id":deploymentconfig:CodeDeployDefault.AllAtOnce"
+export resourse6="arn:aws:sns:us-east-1:"$account_id":password_reset"
 domain_name=$(aws route53 list-hosted-zones --query 'HostedZones[0].Name' --output text)
 bucket_name="code-deploy."$domain_name"csye6225.com"
 
 STACK_ID=$(\aws cloudformation create-stack --stack-name ${STACK_NAME} \
 --template-body file://csye6225-cf-cicd.json \
---parameters ParameterKey=Resource1,ParameterValue=$resourse1 ParameterKey=Resource2,ParameterValue=$resourse2 ParameterKey=Resource3,ParameterValue=$resourse3 ParameterKey=Resource4,ParameterValue=$resourse4 ParameterKey=Resource5,ParameterValue=$resourse5 ParameterKey=TravisUploadToS3PolicyName,ParameterValue=$TRAVIS_UPLOAD_TO_S3_POLICY_NAME ParameterKey=TravisCDPolicyName,ParameterValue=$TRAVIS_CODE_DEPLOY_POLICY_NAME   ParameterKey=CodeDeployServiceRoleService,ParameterValue=$CODE_DEPLOY_SERVICEROLE_SERVICE  ParameterKey=CodeDeployServiceRoleName,ParameterValue=$CODE_DEPLOY_SERVICE_ROLE ParameterKey=ApplicationName,ParameterValue=${application_name} ParameterKey=BucketName,ParameterValue=${bucket_name} ParameterKey=CodeDeployEC2ServiceRoleService,ParameterValue=$CODE_DEPLOY_EC2_SERVICEROLE_SERVICE ParameterKey=CodeDeployEC2ServiceRoleName,ParameterValue=$CODE_DEPLOY_EC2_SERVICE_ROLE ParameterKey=CodeDeployEC2S3Name,ParameterValue=$CODE_DEPLOY_EC2_S3_NAME \
+--parameters ParameterKey=Resource1,ParameterValue=$resourse1 ParameterKey=Resource2,ParameterValue=$resourse2 ParameterKey=Resource3,ParameterValue=$resourse3 ParameterKey=Resource4,ParameterValue=$resourse4 ParameterKey=Resource5,ParameterValue=$resourse5 ParameterKey=TravisUploadToS3PolicyName,ParameterValue=$TRAVIS_UPLOAD_TO_S3_POLICY_NAME ParameterKey=TravisCDPolicyName,ParameterValue=$TRAVIS_CODE_DEPLOY_POLICY_NAME   ParameterKey=CodeDeployServiceRoleService,ParameterValue=$CODE_DEPLOY_SERVICEROLE_SERVICE  ParameterKey=CodeDeployServiceRoleName,ParameterValue=$CODE_DEPLOY_SERVICE_ROLE ParameterKey=ApplicationName,ParameterValue=${application_name} ParameterKey=BucketName,ParameterValue=${bucket_name} ParameterKey=CodeDeployEC2ServiceRoleService,ParameterValue=$CODE_DEPLOY_EC2_SERVICEROLE_SERVICE ParameterKey=CodeDeployEC2ServiceRoleName,ParameterValue=$CODE_DEPLOY_EC2_SERVICE_ROLE ParameterKey=CodeDeployEC2S3Name,ParameterValue=$CODE_DEPLOY_EC2_S3_NAME ParameterKey=Resourse6,ParameterValue=$resourse6 \
 --capabilities CAPABILITY_IAM \
 --capabilities CAPABILITY_NAMED_IAM \
 | jq -r .StackId \
