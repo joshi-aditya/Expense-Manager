@@ -2,7 +2,6 @@ package com.cloud.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
@@ -27,8 +26,6 @@ public class AmazonClient implements BaseClient{
 	
 	private static final String DIRECTORY = "Images/";
 
-    private static final String DOT = ".";
-    
     private static final String UNDERSCORE = "_";
 
 	@Value("${amazonProperties.endpointUrl}")

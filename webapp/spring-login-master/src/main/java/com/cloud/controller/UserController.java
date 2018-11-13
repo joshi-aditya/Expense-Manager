@@ -44,8 +44,7 @@ public class UserController {
     @ResponseBody
     public String time(){
     	    	
-    	statsDClient.incrementCounter("/time");
-    	logger.info("/time, methods=[GET], Get Time");
+    	statsDClient.incrementCounter("endpoint.time.http.get");
     	logger.info("Get Time");
     	return new Date().toString();
     }
@@ -58,8 +57,7 @@ public class UserController {
     @ResponseBody
     public String createNewUser(@RequestBody User user, BindingResult bindingResult) {
 
-    	statsDClient.incrementCounter("/user/register");
-    	logger.info("/user/register, methods=[POST], Register User");
+   	    statsDClient.incrementCounter("endpoint.user.register.http.post");
         logger.info("Create New User - Start");
 
         User userExists = userService.findUserByEmail(user.getEmail());
@@ -83,9 +81,8 @@ public class UserController {
   @RequestMapping(value="/logout", method = RequestMethod.GET)
 	public void logout (HttpServletRequest request, HttpServletResponse response) {
     	
-	  	statsDClient.incrementCounter("/logout");
-	  	logger.info("/logout, methods=[GET], Logout");
-    	logger.info("Logout - Start");
+	  statsDClient.incrementCounter("endpoint.logout.http.get");
+    logger.info("Logout - Start");
     	
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null){    
@@ -100,9 +97,8 @@ public class UserController {
     @RequestMapping(value="/reset", method = RequestMethod.GET)
 	public Status generateResetToken(@RequestParam("email") String email) {
 
-    	statsDClient.incrementCounter("/reset");
-    	logger.info("/reset, methods=[GET], Reset Password");
-    	Status status = new Status();
+    statsDClient.incrementCounter("endpoint.reset.http.get");
+    Status status = new Status();
 		logger.info("generateResetToken - Start ");
 		
 		try 

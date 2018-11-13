@@ -64,8 +64,7 @@ public class TransactionController {
 	@ResponseBody
 	public TransactionWrapper findByUserId(HttpServletResponse response) throws IOException {
 		
-		statsDClient.incrementCounter("/transaction");
-		logger.info("/transaction, methods=[GET], Get Transaction");
+		statsDClient.incrementCounter("endpoint.transaction.http.get");
 		logger.info("Find Transactions by User : Start");
 		
 		TransactionWrapper transactions = new TransactionWrapper();
@@ -99,8 +98,7 @@ public class TransactionController {
 	@ResponseBody
 	public Status create(@RequestBody Transaction transaction, HttpServletResponse response) throws IOException {
 
-		statsDClient.incrementCounter("/transaction");
-		logger.info("/transaction, methods=[POST], Create Transaction");
+		statsDClient.incrementCounter("endpoint.transaction.http.post");
 		logger.info("Create Transaction - Start");
 
 		Status status = new Status();
@@ -147,8 +145,7 @@ public class TransactionController {
 	public Status update(@PathVariable String id, @RequestBody Transaction transaction, HttpServletResponse response)
 			throws IOException {
 		
-		statsDClient.incrementCounter("/transaction/{id}");
-		logger.info("/transaction/{id}, methods=[PUT], Update Transaction");
+		statsDClient.incrementCounter("endpoint.transaction.http.put");
 		logger.info("Update Transaction - Start");
 		
 		Status status = new Status();
@@ -192,8 +189,7 @@ public class TransactionController {
 	@ResponseBody
 	public Status delete(@PathVariable String id, HttpServletResponse response) throws IOException {
 		
-		statsDClient.incrementCounter("/transaction/{id}");
-		logger.info("/transaction/{id}, methods=[DELETE], Delete Transaction");
+		statsDClient.incrementCounter("endpoint.transaction.http.delete");
 		logger.info("Delete Transaction - Start");
 		
 		Status status = new Status();
@@ -233,8 +229,7 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.GET)
 	public AttachmentWrapper getReceipt(@PathVariable String id, HttpServletResponse response) throws IOException {
 
-		statsDClient.incrementCounter("/transaction/{id}/attachments");
-		logger.info("/transaction/{id}/attachments, methods=[GET], Get Receipt");
+		statsDClient.incrementCounter("endpoint.transaction.attachments.http.get");
 		logger.info("Get Transaction Receipt with id : " + id + "Start");
 
 		// Fetches the current user name who is logged in
@@ -276,8 +271,7 @@ public class TransactionController {
 	@RequestMapping(value = "/transaction/{id}/attachments", method = RequestMethod.POST)
 	public Status uploadReceipt(@PathVariable String id, @RequestPart(value = "file") MultipartFile file) {
 
-		statsDClient.incrementCounter("/transaction/{id}/attachments");
-		logger.info("/transaction/{id}/attachments, methods=[POST], Upload Receipt");
+		statsDClient.incrementCounter("endpoint.transaction.attachments.http.post");
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 
 		// Fetches the current user name who is logged in
@@ -328,8 +322,7 @@ public class TransactionController {
 	public Status updateReceipt(@PathVariable String id, @PathVariable String attachmentId,
 			@RequestPart(value = "file") MultipartFile file) {
 
-		statsDClient.incrementCounter("/transaction/{id}/attachments/{attachmentId}");
-		logger.info("/transaction/{id}/attachments/{attachmentId}, methods=[PUT], Update Receipt");
+		statsDClient.incrementCounter("endpoint.transaction.attachments.http.put");
 		logger.info("Attach Transaction Receipt with id : " + id + " - Start");
 
 		// Fetches the current user name who is logged in
@@ -401,8 +394,7 @@ public class TransactionController {
 	public Status deleteAttachment(@PathVariable String id, @PathVariable String attachmentId,
 			HttpServletResponse response) throws IOException {
 
-		statsDClient.incrementCounter("/transaction/{id}/attachments/{attachmentId}");
-		logger.info("/transaction/{id}/attachments/{attachmentId}, methods=[DELETE], Delete Receipt");
+		statsDClient.incrementCounter("endpoint.transaction.attachments.http.delete");
 		logger.info("Delete Transaction Receipt with id : " + id + "- Start");
 
 		// Fetches the current user name who is logged in
