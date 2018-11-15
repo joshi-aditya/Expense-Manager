@@ -297,13 +297,13 @@
             "Properties": {
                 "AttributeDefinitions": [
                     {
-                        "AttributeName": "Id",
+                        "AttributeName": "id",
                         "AttributeType": "S"
                     }
                 ],
                 "KeySchema": [
                     {
-                        "AttributeName": "Id",
+                        "AttributeName": "id",
                         "KeyType": "HASH"
                     }
                 ],
@@ -311,7 +311,11 @@
                     "ReadCapacityUnits": "5",
                     "WriteCapacityUnits": "5"
                 },
-                "TableName": "csye6225"
+                "TableName": "csye6225",
+                "TimeToLiveSpecification": {
+                    "AttributeName": "ttl",
+                    "Enabled": "TRUE"
+                }  
             }
         },
         "S3Bucket": {
