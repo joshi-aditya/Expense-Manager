@@ -19,85 +19,18 @@
         "BucketName": {
             "Description": "A S3 bucket name",
             "Type": "String"
-        },
-        "CodeDeployEC2S3Name":{
-           "Type":"String"
-        },
-        "CodeDeployEC2ServiceRoleName":{
-            "Type":"String"
-         },
-         "CodeDeployEC2ServiceRoleService":{
-            "Type":"String"
-         }
+        }
     },
     "Resources": {
-        "CodeDeployEC2S3":{
-            "Type":"AWS::IAM::ManagedPolicy",
-            "Properties":{
-               "PolicyDocument":{
-                  "Version":"2012-10-17",
-                  "Statement":[
-                     {
-                        "Action":[
-                           "s3:Get*",
-                           "s3:List*",
-                           "s3:PutObject",
-                           "s3:GetObject",
-                           "s3:DeleteObject"
-                        ],
-                        "Effect":"Allow",
-                        "Resource":"*"
-                     }
-                  ]
-               },
-               "ManagedPolicyName":{
-                  "Ref":"CodeDeployEC2S3Name"
-               }
-            }
-         },
-        "CodeDeployEC2ServiceRole":{
-            "Type":"AWS::IAM::Role",
-            "Properties":{
-               "RoleName":{
-                  "Ref":"CodeDeployEC2ServiceRoleName"
-               },
-               "AssumeRolePolicyDocument":{
-                  "Version":"2012-10-17",
-                  "Statement":[
-                     {
-                        "Effect":"Allow",
-                        "Principal":{
-                           "Service":[
-                              {
-                                 "Ref":"CodeDeployEC2ServiceRoleService"
-                              }
-                           ]
-                        },
-                        "Action":[
-                           "sts:AssumeRole"
-                        ]
-                     }
-                  ]
-               },
-               "ManagedPolicyArns":[
-                  {
-                     "Ref":"CodeDeployEC2S3"
-                  },
-                  "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-               ]
-            }
-         },
-         "CodeDeployEC2ServiceRoleInstanceProfile":{
+        "CodeDeployEC2ServiceRoleInstanceProfile":{
             "Type":"AWS::IAM::InstanceProfile",
             "Properties":{
-               "Path":"/",
-               "Roles":[
-                  {
-                     "Ref":"CodeDeployEC2ServiceRole"
-                  }
-               ]
+            "Path":"/",
+            "Roles":[
+                "CodeDeployEC2ServiceRole"
+            ]
             }
-         },   
+      },
         "EC2Instance": {
             "Type": "AWS::EC2::Instance",
             "Properties": {
@@ -227,7 +160,36 @@
                                 "#systemctl start cloudwatch.service",
                                 "#systemctl enable cloudwatch.service",
                                 "sudo systemctl enable tomcat.service",
-                                "sudo systemctl start tomcat.service"
+                                "sudo systemctl start tomcat.service",
+                                "sudo mkdir /tmp/AmazonCloudWatchAgent",
+                                "cd /tmp/AmazonCloudWatchAgent/",
+                                "sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm",
+                                "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+                                "cd /opt/aws/amazon-cloudwatch-agent/bin/",
+                                "cd /home/centos",
+                                "echo '{\"agent\": {\"metrics_collection_interval\": 10,\"logfile\": \"/var/logs/amazon-cloudwatch-agent.log\"},\"logs\": {\"logs_collected\": {\"files\": {\"collect_list\": [{\"file_path\":\"/opt/tomcat/logs/csye6225.log\",\"log_group_name\": \"csye6225_fall2018\",\"log_stream_name\": \"webapp\"}]}},\"log_stream_name\": \"cloudwatch_log_stream\"},\"metrics\":{\"metrics_collected\":{\"statsd\":{\"service_address\":\":8125\",\"metrics_collection_interval\":10,\"metrics_aggregation_interval\":60}}}}' > cloudwatch-config.json",
+                                "sudo mv /home/centos/cloudwatch-config.json /opt/aws/amazon-cloudwatch-agent/bin/",
+                                "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/cloudwatch-config.json -s",
+                                "echo 'sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/cloudwatch-config.json -s' > awslogs-agent-launcher.sh",
+                                "sudo mv /home/centos/awslogs-agent-launcher.sh /opt/aws/amazon-cloudwatch-agent/bin/",
+                                "cd /home/centos",
+                                "sudo echo '[Unit]' > cloudwatch.service",
+                                "echo 'Description=Service for Cloudwatch logs Agent' >> cloudwatch.service",
+                                "echo 'After=c-local.service' >> cloudwatch.service",
+                                "echo '[Service]' >> cloudwatch.service",
+                                "echo 'Type=simple' >> cloudwatch.service",
+                                "echo 'Restart=always' >> cloudwatch.service",
+                                "echo 'KillMode=process' >> cloudwatch.service",
+                                "echo 'TimeoutSec=infinity' >> cloudwatch.service",
+                                "echo 'Type=simple' >> cloudwatch.service",
+                                "echo 'PIDFile=/opt/aws/amazon-cloudwatch-agent/var/amazon-cloudwatch-agent.pid' >> cloudwatch.service",
+                                "echo 'ExecStart=/opt/aws/amazon-cloudwatch-agent/bin/awslogs-agent-launcher.sh --start --background --pidfile $PIDFILE --user awslogs --chuid awslogs &amp;' >> cloudwatch.service",
+                                "echo '[Install]' >> cloudwatch.service",
+                                "echo 'WantedBy=multi-user.target' >> cloudwatch.service",
+                                "sudo mv cloudwatch.service /etc/systemd/system",
+                                "cd /etc/systemd/system",
+                                "sudo systemctl start cloudwatch.service",
+                                "sudo systemctl enable cloudwatch.service"  
                             ]
                         ]
                     }
@@ -335,13 +297,13 @@
             "Properties": {
                 "AttributeDefinitions": [
                     {
-                        "AttributeName": "Id",
+                        "AttributeName": "id",
                         "AttributeType": "S"
                     }
                 ],
                 "KeySchema": [
                     {
-                        "AttributeName": "Id",
+                        "AttributeName": "id",
                         "KeyType": "HASH"
                     }
                 ],
@@ -349,7 +311,11 @@
                     "ReadCapacityUnits": "5",
                     "WriteCapacityUnits": "5"
                 },
-                "TableName": "csye6225"
+                "TableName": "csye6225",
+                "TimeToLiveSpecification": {
+                    "AttributeName": "ttl",
+                    "Enabled": "TRUE"
+                }  
             }
         },
         "S3Bucket": {
@@ -359,7 +325,50 @@
                     "Ref": "BucketName"
                 }
             }
-        }
+        },
+        "CloudWatchLogGroup": {
+            "Type" : "AWS::Logs::LogGroup",
+            "Properties" : {
+                "LogGroupName" : "csye6225_fall2018"
+             
+            }
+        },
+        "webapp": {
+            "Type": "AWS::Logs::LogStream",
+            "Properties": {
+              "LogGroupName" : "csye6225_fall2018",
+              "LogStreamName": "webapp"
+            },
+            "DependsOn": "CloudWatchLogGroup"
+        },
+        "PostUserMetricFilter": {
+            "Type": "AWS::Logs::MetricFilter",
+            "Properties": {
+                "LogGroupName": { "Ref": "CloudWatchLogGroup" },
+                "FilterPattern": "Create New User - Start",
+                "MetricTransformations": [
+                    {
+                       "MetricValue": "1",
+                       "MetricNamespace": "Webapp",
+                       "MetricName": "PostUser"
+                    }
+                ]
+            }
+        },
+        "GetTimeMetricFilter": {
+            "Type": "AWS::Logs::MetricFilter",
+            "Properties": {
+                "LogGroupName": { "Ref": "CloudWatchLogGroup" },
+                "FilterPattern": "Get Time",
+                "MetricTransformations": [
+                    {
+                       "MetricValue": "1",
+                       "MetricNamespace": "Webapp",
+                       "MetricName": "GetTime"
+                    }
+                ]
+            }
+        }    
     },
     "Outputs": {
         "InstanceId": {

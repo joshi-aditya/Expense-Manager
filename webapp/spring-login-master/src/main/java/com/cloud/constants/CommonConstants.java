@@ -41,6 +41,9 @@ public class CommonConstants {
 	/* Upload attachments failure */
 	public static String UPLOAD_ATTACHMENTS_FAILURE = "Upload attachment for transaction failed";
 	
+	/* Send reset email failure */
+	public static String SEND_RESET_EMAIL_FAILURE = "Reset email failed";
+	
 	/* Upload attachments failure */
 	public static String INVALID_ATTACHMENT = "Invalid attachment extension";
 	
@@ -52,6 +55,9 @@ public class CommonConstants {
 	
 	/* Attachment not present */
 	public static String ATTACHMENTS_NOT_PRESENT = "Receipt not present for the transaction";
+	
+	/* Password reset email sent successfully */
+	public static String PASSWORD_RESET_EMAIL = "Password reset email sent";
 	
 	public static interface StatusCodes
 	{
