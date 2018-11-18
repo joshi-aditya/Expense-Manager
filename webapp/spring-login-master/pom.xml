@@ -5,8 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.example</groupId>
-	<artifactId>login</artifactId>
-	<version>0.0.1</version>
+	<artifactId>cloudApp</artifactId>
 	<packaging>war</packaging>
 	<description>Demo project for Spring Boot</description>
 
