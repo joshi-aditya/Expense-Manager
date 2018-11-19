@@ -62,7 +62,7 @@ public class TransactionController {
 	 */
 	@RequestMapping(value = "/transaction", method = RequestMethod.GET)
 	@ResponseBody
-	public TransactionWrapper findByUserId(HttpServletResponse response) throws IOException {
+	public TransactionWrapper findTransactionsByUserId(HttpServletResponse response) throws IOException {
 		
 		statsDClient.incrementCounter("endpoint.transaction.http.get");
 		logger.info("Find Transactions by User : Start");
