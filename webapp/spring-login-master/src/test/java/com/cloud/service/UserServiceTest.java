@@ -15,8 +15,12 @@ import com.cloud.repository.UserRepository;
 
 public class UserServiceTest {
 
-	private String email  	= "test@neu.com";
-	private String password = "1234";
+	//User details
+	private int userId  		= 1;
+	private String email  		= "test@neu.com";
+	private String lastName  	= "lastName";
+	private String name  		= "name";
+	private String password 	= "1234";
 	
 	@InjectMocks
 	UserService userService;
@@ -42,8 +46,12 @@ public class UserServiceTest {
 	private void mockUserCreation()
 	{
 		userAccount = new User();
+		userAccount.setId(userId);
+		userAccount.setName(name);
+		userAccount.setLastName(lastName);
 		userAccount.setEmail(email);
 		userAccount.setPassword(password);
+		userAccount.setActive(1);
 		when(userRepository.save(userAccount)).thenReturn(userAccount);
 	}
 	
