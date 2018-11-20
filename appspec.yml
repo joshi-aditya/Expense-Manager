@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:             
-  - source: ./webapp/spring-login-master/target/cloudApp.war
+  - source: ./webapp/spring-login-master/target/cloudApp-0.0.1.war
     destination: /opt/tomcat/webapps
 
 hooks:
