@@ -345,6 +345,15 @@
                         "Ref": "ALBTargetGroup"
                     }
                 ],
+                "Tags": [{
+					"Key": {
+						"Ref": "AutoscaleTagKey"
+					},
+					"Value": {
+						"Ref": "AutoscaleTagValue"
+					},
+					"PropagateAtLaunch" : "true"
+				}],
                 "VPCZoneIdentifier": [
                     {
                         "Ref": "SubnetId"
