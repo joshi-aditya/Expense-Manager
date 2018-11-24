@@ -52,49 +52,19 @@
                     },
                     {
                         "IpProtocol": "tcp",
-                        "SourceSecurityGroupId": {
-                            "Fn::Select": [
-                                0,
-                                {
-                                    "Fn::GetAtt": [
-                                        "ApplicationLoadBalancer",
-                                        "SecurityGroups"
-                                    ]
-                                }
-                            ]
-                        },
+                        "CidrIp": "0.0.0.0/0",
                         "FromPort": "80",
                         "ToPort": "80"
                     },
                     {
                         "IpProtocol": "tcp",
-                        "SourceSecurityGroupId": {
-                            "Fn::Select": [
-                                0,
-                                {
-                                    "Fn::GetAtt": [
-                                        "ApplicationLoadBalancer",
-                                        "SecurityGroups"
-                                    ]
-                                }
-                            ]
-                        },
+                        "CidrIp": "0.0.0.0/0",
                         "FromPort": "443",
                         "ToPort": "443"
                     },
                     {
                         "IpProtocol": "tcp",
-                        "SourceSecurityGroupId": {
-                            "Fn::Select": [
-                                0,
-                                {
-                                    "Fn::GetAtt": [
-                                        "ApplicationLoadBalancer",
-                                        "SecurityGroups"
-                                    ]
-                                }
-                            ]
-                        },
+                        "CidrIp": "0.0.0.0/0",
                         "FromPort": "8080",
                         "ToPort": "8080"
                     }
@@ -391,16 +361,26 @@
         "WebServerGroup": {
             "Type": "AWS::AutoScaling::AutoScalingGroup",
             "Properties": {
-                "AvailabilityZones": {
-                    "Fn::GetAZs": ""
-                },
                 "Cooldown": "60",
                 "DesiredCapacity": "3",
                 "LaunchConfigurationName": {
                     "Ref": "LaunchConfig"
                 },
                 "MinSize": "3",
-                "MaxSize": "10"
+                "MaxSize": "10",
+                "TargetGroupARNs": [
+                    {
+                        "Ref": "ALBTargetGroup"
+                    }
+                ],
+                "VPCZoneIdentifier": [
+                    {
+                        "Ref": "SubnetId"
+                    },
+                    {
+                        "Ref": "SubnetId2"
+                    }
+                ]
             }
         },
         "WebServerScaleUpPolicy": {
@@ -487,6 +467,11 @@
                     },
                     {
                         "Ref": "SubnetId2"
+                    }
+                ],
+                "SecurityGroups": [
+                    {
+                        "Ref": "InstanceSecurityGroup"
                     }
                 ]
             }
