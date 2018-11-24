@@ -19,7 +19,7 @@ echo "Creating stack.."
 
 STACK_ID=$(\aws cloudformation create-stack --stack-name ${STACK_NAME} \
 	--template-body file://csye6225-cf-auto-scaling-application.json\
-	--parameters ParameterKey=StackName,ParameterValue=${STACK_NAME} ParameterKey=VpcId,ParameterValue=${vpc_id} ParameterKey=SubnetId,ParameterValue=${subnet_id} ParameterKey=SubnetId2,ParameterValue=${subnet_id2} ParameterKey=BucketName,ParameterValue=${bucket_name} ParameterKey=CertificateArn,ParameterValue=${certificate_arn} \
+	--parameters ParameterKey=StackName,ParameterValue=${STACK_NAME} ParameterKey=VpcId,ParameterValue=${vpc_id} ParameterKey=SubnetId,ParameterValue=${subnet_id} ParameterKey=SubnetId2,ParameterValue=${subnet_id2} ParameterKey=BucketName,ParameterValue=${bucket_name} ParameterKey=CertificateArn,ParameterValue=${certificate_arn} ParameterKey=HostedZoneName,ParameterValue=${domain_name} \
 	--capabilities CAPABILITY_IAM \
 	--capabilities CAPABILITY_NAMED_IAM \
  	| jq -r .StackId \
