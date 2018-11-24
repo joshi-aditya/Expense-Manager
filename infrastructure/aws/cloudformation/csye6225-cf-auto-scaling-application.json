@@ -346,12 +346,8 @@
                     }
                 ],
                 "Tags": [{
-					"Key": {
-						"Ref": "AutoscaleTagKey"
-					},
-					"Value": {
-						"Ref": "AutoscaleTagValue"
-					},
+					"Key": "Name",
+					"Value": "csye6225_webapp_ec2",		
 					"PropagateAtLaunch" : "true"
 				}],
                 "VPCZoneIdentifier": [
