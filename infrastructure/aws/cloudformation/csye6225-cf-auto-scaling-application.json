@@ -187,7 +187,7 @@
         "LaunchConfig": {
             "Type": "AWS::AutoScaling::LaunchConfiguration",
             "Properties": {
-                "AssociatePublicIpAddress": "false",
+                "AssociatePublicIpAddress": "true",
                 "KeyName": "csye6225-keypair",
                 "ImageId": "ami-9887c6e7",
                 "InstanceType": "t2.micro",
@@ -497,8 +497,9 @@
                 "HealthCheckIntervalSeconds": 60,
                 "UnhealthyThresholdCount": 10,
                 "HealthCheckPath": "/",
+                "HealthCheckPort": 8080,
                 "Name": "ALBTargetGroup",
-                "Port": 80,
+                "Port": 8080,
                 "Protocol": "HTTP",
                 "VpcId": {
                     "Ref": "VpcId"
