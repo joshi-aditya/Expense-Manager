@@ -19,6 +19,10 @@
         "BucketName": {
             "Description": "A S3 bucket name",
             "Type": "String"
+        },
+        "CertificateArn": {
+            "Description": "Certificate Arn",
+            "Type": "String"
         }
     },
     "Resources": {
@@ -510,7 +514,9 @@
             "Properties": {
                 "Certificates": [
                     {
-                        "CertificateArn": "arn:aws:acm:us-east-1:377036323651:certificate/581d7867-7f25-4c46-b8bc-f5a786518c0c"
+                        "CertificateArn": {
+                            "Ref": "CertificateArn"
+                        }
                     }
                 ],
                 "DefaultActions": [
