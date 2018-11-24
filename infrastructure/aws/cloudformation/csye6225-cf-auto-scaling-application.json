@@ -23,6 +23,10 @@
         "CertificateArn": {
             "Description": "Certificate Arn",
             "Type": "String"
+        },
+        "HostedZoneName": {
+            "Description": "Hosted zone name",
+            "Type": "String"
         }
     },
     "Resources": {
@@ -179,38 +183,6 @@
                 "LogStreamName": "webapp"
             },
             "DependsOn": "CloudWatchLogGroup"
-        },
-        "PostUserMetricFilter": {
-            "Type": "AWS::Logs::MetricFilter",
-            "Properties": {
-                "LogGroupName": {
-                    "Ref": "CloudWatchLogGroup"
-                },
-                "FilterPattern": "Create New User - Start",
-                "MetricTransformations": [
-                    {
-                        "MetricValue": "1",
-                        "MetricNamespace": "Webapp",
-                        "MetricName": "PostUser"
-                    }
-                ]
-            }
-        },
-        "GetTimeMetricFilter": {
-            "Type": "AWS::Logs::MetricFilter",
-            "Properties": {
-                "LogGroupName": {
-                    "Ref": "CloudWatchLogGroup"
-                },
-                "FilterPattern": "Get Time",
-                "MetricTransformations": [
-                    {
-                        "MetricValue": "1",
-                        "MetricNamespace": "Webapp",
-                        "MetricName": "GetTime"
-                    }
-                ]
-            }
         },
         "LaunchConfig": {
             "Type": "AWS::AutoScaling::LaunchConfiguration",
@@ -531,6 +503,41 @@
                 "VpcId": {
                     "Ref": "VpcId"
                 }
+            }
+        },
+        "ResourceRecords": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "HostedZoneName": {
+                    "Ref": "HostedZoneName"
+                },
+                "Name": {
+                    "Fn::Join": [
+                        ".",
+                        [
+                            "csye6225",
+                            {
+                                "Ref": "HostedZoneName"
+                            }
+                        ]
+                    ]
+                },
+                "AliasTarget": {
+                    "HostedZoneId": {
+                        "Fn::GetAtt": [
+                            "ApplicationLoadBalancer",
+                            "CanonicalHostedZoneID"
+                        ]
+                    },
+                    "EvaluateTargetHealth": "TRUE",
+                    "DNSName": {
+                        "Fn::GetAtt": [
+                            "ApplicationLoadBalancer",
+                            "DNSName"
+                        ]
+                    }
+                },
+                "Type": "A"
             }
         }
     }
