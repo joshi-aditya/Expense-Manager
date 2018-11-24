@@ -345,11 +345,13 @@
                         "Ref": "ALBTargetGroup"
                     }
                 ],
-                "Tags": [{
-					"Key": "Name",
-					"Value": "csye6225_webapp_ec2",		
-					"PropagateAtLaunch" : "true"
-				}],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "csye6225_webapp_ec2",
+                        "PropagateAtLaunch": "true"
+                    }
+                ],
                 "VPCZoneIdentifier": [
                     {
                         "Ref": "SubnetId"
@@ -518,15 +520,7 @@
                     "Ref": "HostedZoneName"
                 },
                 "Name": {
-                    "Fn::Join": [
-                        ".",
-                        [
-                            "csye6225",
-                            {
-                                "Ref": "HostedZoneName"
-                            }
-                        ]
-                    ]
+                    "Ref": "HostedZoneName"
                 },
                 "AliasTarget": {
                     "HostedZoneId": {
