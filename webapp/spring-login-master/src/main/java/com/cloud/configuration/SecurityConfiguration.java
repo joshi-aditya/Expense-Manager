@@ -44,9 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .and()
-                .csrf().disable();
+                .authenticationEntryPoint(authenticationEntryPoint);
     }
 
     @Override
