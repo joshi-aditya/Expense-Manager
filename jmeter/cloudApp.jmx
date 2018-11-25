@@ -31,7 +31,7 @@
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
             <collectionProp name="-2054363725">
-              <stringProp name="696160501">csye6225-fall2018-bhangalen.me.</stringProp>
+              <stringProp name="696160501">csye6225-fall2018-joshiadit.me.</stringProp>
             </collectionProp>
           </collectionProp>
           <boolProp name="UserParameters.per_iteration">false</boolProp>
@@ -131,7 +131,7 @@
           <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
             <stringProp name="delimiter">,</stringProp>
             <stringProp name="fileEncoding"></stringProp>
-            <stringProp name="filename">C:/Users/nehab/Documents/Cloud_Fall18/User1.csv</stringProp>
+            <stringProp name="filename">/home/apjoshi/csye6225/dev/csye6225-fall2018/jmeter/User1.csv</stringProp>
             <boolProp name="ignoreFirstLine">true</boolProp>
             <boolProp name="quotedData">false</boolProp>
             <boolProp name="recycle">true</boolProp>
@@ -161,7 +161,7 @@
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
             <collectionProp name="-2054363725">
-              <stringProp name="696160501">csye6225-fall2018-bhangalen.me.</stringProp>
+              <stringProp name="696160501">csye6225-fall2018-joshiadit.me.</stringProp>
             </collectionProp>
           </collectionProp>
           <boolProp name="UserParameters.per_iteration">false</boolProp>
@@ -735,7 +735,7 @@
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">C:/Users/nehab/Documents/Cloud_Fall18/User1.csv</stringProp>
+          <stringProp name="filename">/home/apjoshi/csye6225/dev/csye6225-fall2018/jmeter/User1.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
