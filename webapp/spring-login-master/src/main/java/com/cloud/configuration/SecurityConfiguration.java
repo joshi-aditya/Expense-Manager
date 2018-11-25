@@ -38,6 +38,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	
+    	http.csrf().ignoringAntMatchers("/user/register");
+    	http.csrf().ignoringAntMatchers("/reset*");
+    	
         http.authorizeRequests()
         		.antMatchers("/user/register").permitAll()
         		.antMatchers("/reset*").permitAll()
