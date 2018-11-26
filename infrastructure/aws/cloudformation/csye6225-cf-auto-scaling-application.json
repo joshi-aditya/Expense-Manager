@@ -455,25 +455,7 @@
                 ]
             }
         },
-        "ApplicationLoadBalancerListener1": {
-            "Type": "AWS::ElasticLoadBalancingV2::Listener",
-            "Properties": {
-                "DefaultActions": [
-                    {
-                        "Type": "forward",
-                        "TargetGroupArn": {
-                            "Ref": "ALBTargetGroup"
-                        }
-                    }
-                ],
-                "LoadBalancerArn": {
-                    "Ref": "ApplicationLoadBalancer"
-                },
-                "Port": "80",
-                "Protocol": "HTTP"
-            }
-        },
-        "ApplicationLoadBalancerListener2": {
+       "ApplicationLoadBalancerListener2": {
             "Type": "AWS::ElasticLoadBalancingV2::Listener",
             "Properties": {
                 "Certificates": [
