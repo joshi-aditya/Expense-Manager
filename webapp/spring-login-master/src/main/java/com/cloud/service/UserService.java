@@ -1,5 +1,6 @@
 package com.cloud.service;
 
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -45,6 +46,10 @@ public class UserService implements UserDetailsService{
 		this.amazonSNSClient = AmazonSNSAsyncClientBuilder.defaultClient();
 	}
 
+    public String getTime()
+    {
+    	return new Date().toString();
+    }
 
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);

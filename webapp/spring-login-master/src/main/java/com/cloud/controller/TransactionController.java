@@ -62,7 +62,7 @@ public class TransactionController {
 	 */
 	@RequestMapping(value = "/transaction", method = RequestMethod.GET)
 	@ResponseBody
-	public TransactionWrapper findByUserId(HttpServletResponse response) throws IOException {
+	public TransactionWrapper findTransactionsByUserId(HttpServletResponse response) throws IOException {
 		
 		statsDClient.incrementCounter("endpoint.transaction.http.get");
 		logger.info("Find Transactions by User : Start");
@@ -74,6 +74,7 @@ public class TransactionController {
 		try {
 			User user = userService.findUserByEmail(auth.getName());
 			List<Transaction> transactionList = transactionService.findByUserId(user.getId());
+			removeUserDetails(transactionList);
 			transactions.setTransactions(transactionList);
 			transactions.setStatusCode(CommonConstants.StatusCodes.SUCCESS);
 			transactions.setMessage(CommonConstants.SUCCESS);
@@ -465,6 +466,17 @@ public class TransactionController {
 		
 		return actualTransaction;
 	}
-
-
+	
+	/**
+	 * Remove user details from transaction for security purpose
+	 * @param transactions
+	 * @return
+	 */
+	private void removeUserDetails(List<Transaction> transactions)
+	{
+		for(Transaction transaction : transactions)
+		{
+			transaction.setUser(null);
+		}
+	}
 }

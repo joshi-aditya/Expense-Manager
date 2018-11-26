@@ -16,6 +16,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
 
 @Data
@@ -46,6 +48,7 @@ public class Transaction extends Status{
 	
 	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
 	@JoinColumn(name = "user_id")
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private User user;
 	
 	@OneToMany(mappedBy = "transaction")	
