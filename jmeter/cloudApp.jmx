@@ -18,8 +18,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -30,8 +30,8 @@
             <stringProp name="1379103678">serverId</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-2054363725">
-              <stringProp name="696160501">csye6225-fall2018-bhangalen.me.</stringProp>
+            <collectionProp name="45936774">
+              <stringProp name="45936743">domain name</stringProp>
             </collectionProp>
           </collectionProp>
           <boolProp name="UserParameters.per_iteration">false</boolProp>
@@ -81,7 +81,7 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-&quot;email&quot; : &quot;${email}&quot;,&#xd;
+&quot;email&quot; : &quot;${email}@gmail.com&quot;,&#xd;
 &quot;password&quot;: &quot;test&quot;,&#xd;
 &quot;name&quot; : &quot;qwerty&quot;,&#xd;
 &quot;lastName&quot;: &quot;qwerty&quot;,&#xd;
@@ -148,8 +148,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -160,8 +160,8 @@
             <stringProp name="1379103678">serverId</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-2054363725">
-              <stringProp name="696160501">csye6225-fall2018-bhangalen.me.</stringProp>
+            <collectionProp name="-1112927851">
+              <stringProp name="57942516">domain-name</stringProp>
             </collectionProp>
           </collectionProp>
           <boolProp name="UserParameters.per_iteration">false</boolProp>
@@ -227,13 +227,26 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/time</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
+          <hashTree/>
+          <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+            <stringProp name="delimiter">,</stringProp>
+            <stringProp name="fileEncoding"></stringProp>
+            <stringProp name="filename">C:/Users/nehab/Documents/Cloud_Fall18/User1.csv</stringProp>
+            <boolProp name="ignoreFirstLine">true</boolProp>
+            <boolProp name="quotedData">false</boolProp>
+            <boolProp name="recycle">true</boolProp>
+            <stringProp name="shareMode">shareMode.all</stringProp>
+            <boolProp name="stopThread">false</boolProp>
+            <stringProp name="variableNames">email,password </stringProp>
+          </CSVDataSet>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create Transaction" enabled="true">
@@ -281,12 +294,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -319,12 +333,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -373,12 +388,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction/${transactions}</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -405,12 +421,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -452,12 +469,13 @@
               <collectionProp name="AuthManager.auth_list">
                 <elementProp name="" elementType="Authorization">
                   <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction/${transactions}</stringProp>
-                  <stringProp name="Authorization.username">${email}</stringProp>
+                  <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                   <stringProp name="Authorization.password">${password}</stringProp>
                   <stringProp name="Authorization.domain"></stringProp>
                   <stringProp name="Authorization.realm"></stringProp>
                 </elementProp>
               </collectionProp>
+              <boolProp name="AuthManager.clearEachIteration">true</boolProp>
             </AuthManager>
             <hashTree/>
           </hashTree>
@@ -497,12 +515,13 @@
               <collectionProp name="AuthManager.auth_list">
                 <elementProp name="" elementType="Authorization">
                   <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction</stringProp>
-                  <stringProp name="Authorization.username">${email}</stringProp>
+                  <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                   <stringProp name="Authorization.password">${password}</stringProp>
                   <stringProp name="Authorization.domain"></stringProp>
                   <stringProp name="Authorization.realm"></stringProp>
                 </elementProp>
               </collectionProp>
+              <boolProp name="AuthManager.clearEachIteration">true</boolProp>
             </AuthManager>
             <hashTree/>
           </hashTree>
@@ -539,12 +558,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction/${transactions}/attachments</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -577,12 +597,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction/${transactions}/attachments</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -618,12 +639,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction/${transactions}/attachments/${attachments}</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -650,12 +672,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction/${transactions}/attachments</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -691,12 +714,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction/${transactions}/attachments/${attachments}</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>
@@ -723,12 +747,13 @@
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
                 <stringProp name="Authorization.url">https://${serverId}/cloudApp-0.0.1/transaction/${transactions}/attachments</stringProp>
-                <stringProp name="Authorization.username">${email}</stringProp>
+                <stringProp name="Authorization.username">${email}@gmail.com</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
                 <stringProp name="Authorization.realm"></stringProp>
               </elementProp>
             </collectionProp>
+            <boolProp name="AuthManager.clearEachIteration">true</boolProp>
           </AuthManager>
           <hashTree/>
         </hashTree>

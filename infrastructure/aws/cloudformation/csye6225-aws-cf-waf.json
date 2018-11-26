@@ -129,16 +129,6 @@
           },
           {
             "FieldToMatch": {
-              "Type": "BODY"
-            },
-            "TextTransformation": "NONE",
-            "ComparisonOperator": "GT",
-            "Size": {
-              "Ref": "maxExpectedBodySize"
-            }
-          },
-          {
-            "FieldToMatch": {
               "Type": "HEADER",
               "Data": "cookie"
             },
@@ -898,13 +888,6 @@
         "Name": "enforcecsrf",
         "Predicates": [
           {
-            "Type": "ByteMatch",
-            "Negated": false,
-            "DataId": {
-              "Ref": "wafrCSRFMethodStringSet"
-            }
-          },
-          {
             "Type": "SizeConstraint",
             "Negated": true,
             "DataId": {
@@ -1044,9 +1027,7 @@
           },
           {
             "Action": {
-              "Type": {
-                "Ref": "ruleAction"
-              }
+              "Type": "ALLOW"
             },
             "Priority": 80,
             "RuleId": {
