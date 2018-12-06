@@ -1,6 +1,10 @@
 #!/bin/bash
 read -p 'Enter stack name: ' STACK_NAME
 
+export application_name=csye6225-fall2018
+export auto_scaling_group_name=AutoScalingGroup
+export load_balancer_name=ElasticLoadBalancer
+
 vpc_id=$(aws ec2 describe-vpcs --filters "Name=isDefault,Values=false" --query "Vpcs[*].VpcId" --output text)
 echo $vpc_id
 subnet_id=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id}" "Name=mapPublicIpOnLaunch,Values=true" "Name=availabilityZone,Values=us-east-1a" --query 'Subnets[*].SubnetId'  --output text)
@@ -34,4 +38,5 @@ if [ $? -ne 0 ]; then
     exit 1
 else
     echo "EC2 Instance, RDS, security groups, DynamoDB Table and S3 Bucket created!"
+	aws deploy update-deployment-group --application-name $application_name --current-deployment-group-name $application_name --auto-scaling-groups $auto_scaling_group_name --ec2-tag-filters Key=Name,Type=KEY_AND_VALUE,Value=csye6225_webapp_ec2
 fi

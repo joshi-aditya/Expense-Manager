@@ -22,11 +22,10 @@ public class LoginApplication{
 	}
 	
 
-	@RequestMapping(value={"/"}, method = RequestMethod.GET, produces = "application/json")
-    @ResponseBody
-    public String time(){
+	@RequestMapping(value={"/healthcheck"}, method = RequestMethod.GET, produces = "application/json")
+    public String healthCheck(){
     	
-    	return new Date().toString();
+    	return "Success";
     }
 
     
